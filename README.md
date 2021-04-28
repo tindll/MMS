@@ -1,2 +1,6 @@
-# mms
-MoneyMakingScheme aka MMS not as in Multimedia Messaging Service, that'd be weird lol
+# MMS
+fun project, introduction to algorithmic trading, hopefully tenserflow as well
+Trading strategy : based on momentum, ma/macd crossover, rsi(divergences&overbought/oversold) and volume (sellVolume on support, buy volume on resistance)
+determining entries and exits: on MA crossovers, RSI ob/os
+
+nothing complicated to start with it'll complexify over time (probably(hopefully(who knows)))
