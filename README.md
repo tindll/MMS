@@ -7,6 +7,6 @@ nothing complicated to start with it'll complexify over time (probably(hopefully
 
 only looking for trades on btc&eth to start
 
-#TODO - 28/04/21
+# TODO - 28/04/21
 figure out an API to use, how to use it
 
