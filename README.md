@@ -1,7 +1,8 @@
-28/04/21	8:33pm
+28/04/21 -- 8:33pm :
 fun project, introduction to algorithmic trading, hopefully tenserflow as well
+___________________________________
 
-28/04/21	8:47pm	
+28/04/21 -- 8:47pm :	
 (subject to change as I learn more)
 trading strategy : 
 based on momentum, ma/macd crossover, rsi(divergences&overbought/oversold) and volume (sellVolume on support, buy volume on resistance)
@@ -11,3 +12,4 @@ on MA crossovers, RSI ob/os,
 
 nothing complicated to start with
 it'll complexify over time
+___________________________________
