@@ -13,3 +13,5 @@ on MA crossovers, RSI ob/os,
 nothing complicated to start with
 it'll complexify over time
 ___________________________________
+
+test
