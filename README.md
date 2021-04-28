@@ -4,3 +4,5 @@ Trading strategy : based on momentum, ma/macd crossover, rsi(divergences&overbou
 determining entries and exits: on MA crossovers, RSI ob/os
 
 nothing complicated to start with it'll complexify over time (probably(hopefully(who knows)))
+
+only looking for trades on btc&eth to start
