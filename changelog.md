@@ -14,4 +14,7 @@ nothing complicated to start with
 it'll complexify over time
 ___________________________________
 
-test
+28/04/21 -- 9:10pm :
+probably should figure out which API to use and how to use it
+
+___________________________________
