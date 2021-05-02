@@ -20,7 +20,7 @@ probably should figure out which API to use and how to use it
 ___________________________________
 
 02/05/21 -- 9:04pm :
-figured out how to use binance api and mplfinance
+figured out how to use binance api and mplfinance //
 trading strategy based on : RSI divergences, macd crossovers, bbands
 
 ___________________________________
