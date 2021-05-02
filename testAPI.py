@@ -38,13 +38,8 @@ def create_plot(df):
             mpf.make_addplot(df["MACD"], panel='lower', color='red'),
             mpf.make_addplot(df["MACD_signal"], panel='lower', color='orange')
           ]
-    MACD = mpf.make_addplot(df["MACD"], panel='lower')
-    MACD_signal= mpf.make_addplot(df["MACD_signal"], panel='lower')
-    RSI = mpf.make_addplot(df["RSI"], panel='lower')
 
     mpf.plot(df, type='candle', axtitle = "BTCUSDT 1D", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
-    #mpf.plot(df, type='candle', style='yahoo', addplot=MACDplots, ylabel='', ylabel_lower='')
-    #mpf.plot(df,closefig=True)
 
 def valuesforDF():
     #fills dataframe with information : open, close, etc... & rsi, macd, bbands
