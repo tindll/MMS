@@ -8,7 +8,7 @@ trading strategy :
 based on momentum, ma/macd crossover, rsi(divergences&overbought/oversold) and volume (sellVolume on support, buy volume on resistance)
 
 determining entries and exits:
-on MA crossovers, RSI ob/os,
+on MA crossovers, RSI ob/os, AND BIGO FIBBO
 
 nothing complicated to start with
 it'll complexify over time
