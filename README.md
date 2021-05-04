@@ -6,6 +6,12 @@ nothing complicated to start with it'll complexify over time (probably(hopefully
 
 only looking for trades on btc&eth to start
 
+
+
+# TODO - 04/05/21
+short term: code a long/short signal
+long term: figure out how the fuck tenserflow works
+
 # TODO - 28/04/21
 figure out an API to use, how to use it
 
