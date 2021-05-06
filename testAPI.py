@@ -76,11 +76,9 @@ def valuesforDF():
     print(df)
     df.to_csv(r'c:\data\pandas.txt', header=None, index=None, sep='-', mode='a')
 
-def RSIDivergence():
+#def RSIDivergence():
     #regular bullish divergence : price(lower low or equal low) & osci(higher low)
     #hidden bullish divergence : price(higher low) & osci(lower low)
     #regular bearish divergence : price(higher high or equal low) & osci(lower high)
     #hidden bearish divergence : price(lower high) & osci(higher high)
-
-
 valuesforDF()
