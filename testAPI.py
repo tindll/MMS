@@ -39,12 +39,12 @@ def create_plot(df):
             mpf.make_addplot(df["MACD_signal"], panel='lower', color='orange')
           ]
 
-    mpf.plot(df, type='candle', axtitle = "BTCUSDT 1D", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
+    mpf.plot(df, type='candle', axtitle = "BTCUSDT 15M", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
 
 def valuesforDF():
     #fills dataframe with information : open, close, etc... & rsi, macd, bbands
     open,high,low,close,time,pandasdti,volume = [],[],[],[],[],[],[]
-    for kline in client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1DAY, "90 day ago UTC"):
+    for kline in client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_15MINUTE, "3 day ago UTC"):
         pandasdti.append(pd.to_datetime((datetime.datetime.fromtimestamp(kline[0]/1000).strftime('%Y-%m-%d %H:%M'))))
         open.append(float(kline[1]))
         high.append(float(kline[2]))
