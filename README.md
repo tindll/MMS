@@ -4,6 +4,7 @@ Trading strategy : based on momentum, ma/macd crossover, rsi(divergences&overbou
 determining entries and exits: ??? not sure (MAs,ATR?,previous lows) and resistance and support levels
 nothing complicated to start with it'll complexify over time (probably(hopefully(who knows)))
 
+going to print the trades to my website as well for a cheeky bit of react and that
 only looking for trades on btc&eth to start
 
 
