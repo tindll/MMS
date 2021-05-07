@@ -1,13 +1,12 @@
-# MMS
-fun project, introduction to algorithmic trading, hopefully tenserflow as well
-Trading strategy : based on momentum, ma/macd crossover, rsi(divergences&overbought/oversold) and volume (sellVolume on support, buy volume on resistance)
-determining entries and exits: ??? not sure (MAs,ATR?,previous lows) and resistance and support levels
-nothing complicated to start with it'll complexify over time (probably(hopefully(who knows)))
+# MMS aka money making scheme
+Project as an introduction to algorithmic trading. Despite the name, the sole goal isn't just to turn a profit but to understand how to automize the process of trading.
+As I don't want to overcomplexify my trading strategy to start with, I will use simple indicators such as momentum, macd, rsi, bbands (potentially fibonacci
+retracements, ATR, Ichimoku Clouds for things such as closing a position). 
 
-going to print the trades to my website as well for a cheeky bit of react and that
-only looking for trades on btc&eth to start
+A python script will create signals when it thinks it's a good time to enter a position (short/long), based on RSI divergences, close above/below bbands, macd crossovers and potentially ichimoku clouds (given a better understanding of clouds).
+The python code also produces charts (as seen below) and I would like to make a website that shows all active trades with pertinent information : http://www.zjamsty.com/
 
-
+(very optimistic) If I have time, I would also like to try and make a regression based machine learning AI using tensorflow. (My python code produces a CSV file (see c:\data\pandas.txt), and thanks to the binance API, I have access to a near unlimited supply of price information, my datasets will be produces thanks to these CSV files)
 
 ![most recent chart](https://github.com/tindll/mms/blob/main/chart.png)
 
@@ -17,7 +16,7 @@ only looking for trades on btc&eth to start
 
 # TODO - 04/05/21
 short term: code a long/short signal
-long term: figure out how the fuck tenserflow works
+long term: figuring out tensorflow
 
 # TODO - 28/04/21
 figure out an API to use, how to use it
