@@ -1,4 +1,4 @@
-# MMS aka money making scheme
+# MMS (aka Money Making Scheme)
 Project as an introduction to algorithmic trading. Despite the name, the sole goal isn't just to turn a profit but to understand how to automize the process of trading.
 As I don't want to overcomplexify my trading strategy to start with, I will use simple indicators such as momentum, macd, rsi, bbands (potentially fibonacci
 retracements, ATR, Ichimoku Clouds for things such as closing a position). 
