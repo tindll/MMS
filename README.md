@@ -16,7 +16,8 @@ The python code also produces charts (as seen below) and I would like to make a 
 
 # TODO - 04/05/21
 short term: code a long/short signal
-long term: figuring out tensorflow
+
+long term: learn more about ML, figuring out tensorflow
 
 # TODO - 28/04/21
 figure out an API to use, how to use it
