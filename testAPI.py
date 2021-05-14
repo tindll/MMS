@@ -5,6 +5,7 @@ import numpy as np
 import datetime
 from binance.client import Client
 from finta import TA
+from scipy.signal import argrelextrema #for local highs/lows
 
 ## setting up binance API from environment variables ##
 api_key = os.environ.get('API_KEY')
@@ -30,16 +31,21 @@ print(btc_price)
 def create_plot(df):
     mc = mpf.make_marketcolors(up='w',down='b')
     s  = mpf.make_mpf_style(marketcolors=mc)
-
     ap0 = [ mpf.make_addplot(df['BB_UPPER'],color='cyan'), #BBANDS
             mpf.make_addplot(df['BB_LOWER'],color='cyan'), #BBANDS
             mpf.make_addplot(df['BB_MIDDLE'],color='grey'), #BBANDS
             mpf.make_addplot(df["RSI"], panel='lower', color='purple'),
             mpf.make_addplot(df["MACD"], panel='lower', color='red'),
-            mpf.make_addplot(df["MACD_signal"], panel='lower', color='orange')
+            mpf.make_addplot(df["MACD_signal"], panel='lower', color='orange'),
+            mpf.make_addplot(df["min"],type='scatter',markersize=50,color='red',marker='^'),
+            mpf.make_addplot(df["max"],type='scatter',markersize=50,color='green',marker='v')
           ]
+    #localow =df["min"]
+    #apd = mpf.make_addplot(localow,type='scatter',markersize=600,marker='^')
+    #mpf.plot(df,addplot=apd)
 
     mpf.plot(df, type='candle', axtitle = "BTCUSDT 15M", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
+
 
 def valuesforDF():
     #fills dataframe with information : open, close, etc... & rsi, macd, bbands
@@ -72,13 +78,18 @@ def valuesforDF():
     RSI= TA.RSI(df)
     df['RSI'] = RSI
 
-    create_plot(df)
-    print(df)
-    df.to_csv(r'c:\data\pandas.txt', header=None, index=None, sep='-', mode='a')
-
-#def RSIDivergence():
     #regular bullish divergence : price(lower low or equal low) & osci(higher low)
     #hidden bullish divergence : price(higher low) & osci(lower low)
     #regular bearish divergence : price(higher high or equal low) & osci(lower high)
     #hidden bearish divergence : price(lower high) & osci(higher high)
+
+    #plotting local lows for divergences
+    df['min'] = df.iloc[argrelextrema(df.close.values, np.less_equal,order=3)[0]]['close']
+    #plotting local highs for divergences
+    df['max'] = df.iloc[argrelextrema(df.close.values, np.greater_equal,order=3)[0]]['close']
+
+    create_plot(df)
+    print(df)
+    df.to_csv(r'dfCSV.txt', header=None, index=None, sep=',', mode='w+')
+
 valuesforDF()
