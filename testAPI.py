@@ -44,7 +44,7 @@ def create_plot(df):
 def valuesforDF():
     #fills dataframe with information : open, close, etc... & rsi, macd, bbands
     open,high,low,close,time,pandasdti,volume = [],[],[],[],[],[],[]
-    for kline in client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_15MINUTE, "3 day ago UTC"):
+    for kline in client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_5MINUTE, "1 day ago UTC"):
         pandasdti.append(pd.to_datetime((datetime.datetime.fromtimestamp(kline[0]/1000).strftime('%Y-%m-%d %H:%M'))))
         open.append(float(kline[1]))
         high.append(float(kline[2]))
