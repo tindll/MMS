@@ -37,8 +37,8 @@ def create_plot(df):
             mpf.make_addplot(df["RSI"], panel='lower', color='purple'),
             mpf.make_addplot(df["MACD"], panel='lower', color='red'),
             mpf.make_addplot(df["MACD_signal"], panel='lower', color='orange'),
-            mpf.make_addplot(df["min"],type='scatter',markersize=50,color='red',marker='^'),
-            mpf.make_addplot(df["max"],type='scatter',markersize=50,color='green',marker='v')
+            mpf.make_addplot(df["min"],type='scatter',markersize=25,color='red',marker='^'),
+            mpf.make_addplot(df["max"],type='scatter',markersize=25,color='green',marker='v')
           ]
     #localow =df["min"]
     #apd = mpf.make_addplot(localow,type='scatter',markersize=600,marker='^')
