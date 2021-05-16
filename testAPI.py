@@ -38,7 +38,10 @@ def create_plot(df):
             mpf.make_addplot(df["MACD"], panel=3, color='red', ylabel="MACD"),
             mpf.make_addplot(df["MACD_signal"], panel=3, color='orange'),
             mpf.make_addplot(df["min"],type='scatter',markersize=25,color='red',marker='^'),
-            mpf.make_addplot(df["max"],type='scatter',markersize=25,color='green',marker='v')
+            mpf.make_addplot(df["max"],type='scatter',markersize=25,color='green',marker='v'),
+            mpf.make_addplot(df["RSImin"],type='scatter',panel='lower',markersize=25,color='red',marker='^'),
+            mpf.make_addplot(df["RSImax"],type='scatter',panel='lower',markersize=25,color='green',marker='v')
+
           ]
     #localow =df["min"]
     #apd = mpf.make_addplot(localow,type='scatter',markersize=600,marker='^')
@@ -50,7 +53,7 @@ def create_plot(df):
 def valuesforDF():
     #fills dataframe with information : open, close, etc... & rsi, macd, bbands
     open,high,low,close,time,pandasdti,volume = [],[],[],[],[],[],[]
-    for kline in client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_5MINUTE, "1 day ago UTC"):
+    for kline in client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_30MINUTE, "7 day ago UTC"):
         pandasdti.append(pd.to_datetime((datetime.datetime.fromtimestamp(kline[0]/1000).strftime('%Y-%m-%d %H:%M'))))
         open.append(float(kline[1]))
         high.append(float(kline[2]))
@@ -78,18 +81,37 @@ def valuesforDF():
     RSI= TA.RSI(df)
     df['RSI'] = RSI
 
+
+    #dataframe information for divergences (find_divergences())
+    #__________________________________________________________#
+    #order in iloc filters for noise
+    #price
+    #plotting local lows for price
+    df['min'] = df.iloc[argrelextrema(df.close.values, np.less_equal,order=3)[0]]['close']
+    #plotting local highs for price
+    df['max'] = df.iloc[argrelextrema(df.close.values, np.greater_equal,order=3)[0]]['close']
+
+    #oscilator
+    #plotting local lows for rsi
+    df['RSImin'] = df.iloc[argrelextrema(df.RSI.values, np.less_equal,order=5)[0]]['RSI']
+    #plotting local highs for rsi
+    df['RSImax'] = df.iloc[argrelextrema(df.RSI.values, np.greater_equal,order=5)[0]]['RSI']
+    #__________________________________________________________#
+
+
+#   find_divergences(df)
+    create_plot(df)
+    print(df)
+    df.to_csv(r'dfCSV.txt', header=None, index=None, sep=',', mode='w+')
+
+
+#def find_divergences(df):
     #regular bullish divergence : price(lower low or equal low) & osci(higher low)
     #hidden bullish divergence : price(higher low) & osci(lower low)
     #regular bearish divergence : price(higher high or equal low) & osci(lower high)
     #hidden bearish divergence : price(lower high) & osci(higher high)
 
-    #plotting local lows for divergences
-    df['min'] = df.iloc[argrelextrema(df.close.values, np.less_equal,order=3)[0]]['close']
-    #plotting local highs for divergences
-    df['max'] = df.iloc[argrelextrema(df.close.values, np.greater_equal,order=3)[0]]['close']
 
-    create_plot(df)
-    print(df)
-    df.to_csv(r'dfCSV.txt', header=None, index=None, sep=',', mode='w+')
+
 
 valuesforDF()
