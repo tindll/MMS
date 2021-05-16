@@ -34,9 +34,9 @@ def create_plot(df):
     ap0 = [ mpf.make_addplot(df['BB_UPPER'],color='cyan'), #BBANDS
             mpf.make_addplot(df['BB_LOWER'],color='cyan'), #BBANDS
             mpf.make_addplot(df['BB_MIDDLE'],color='grey'), #BBANDS
-            mpf.make_addplot(df["RSI"], panel='lower', color='purple'),
-            mpf.make_addplot(df["MACD"], panel='lower', color='red'),
-            mpf.make_addplot(df["MACD_signal"], panel='lower', color='orange'),
+            mpf.make_addplot(df["RSI"], panel='lower', color='purple', ylabel="RSI"),
+            mpf.make_addplot(df["MACD"], panel=3, color='red', ylabel="MACD"),
+            mpf.make_addplot(df["MACD_signal"], panel=3, color='orange'),
             mpf.make_addplot(df["min"],type='scatter',markersize=25,color='red',marker='^'),
             mpf.make_addplot(df["max"],type='scatter',markersize=25,color='green',marker='v')
           ]
