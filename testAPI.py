@@ -92,24 +92,39 @@ def valuesforDF():
     df['max'] = df.iloc[argrelextrema(df.close.values, np.greater_equal,order=3)[0]]['close']
 
     #oscilator
-    #plotting local lows for rsi
+    #plotting rsi values at price local low/high
     df['RSImin'] = df.iloc[argrelextrema(df.RSI.values, np.less_equal,order=5)[0]]['RSI']
     #plotting local highs for rsi
     df['RSImax'] = df.iloc[argrelextrema(df.RSI.values, np.greater_equal,order=5)[0]]['RSI']
     #__________________________________________________________#
 
 
-#   find_divergences(df)
+    find_divergences(df)
     create_plot(df)
     print(df)
     df.to_csv(r'dfCSV.txt', header=None, index=None, sep=',', mode='w+')
 
 
-#def find_divergences(df):
+def find_divergences(df):
+    #ALL TYPES OF DIVERGENCES :#
+    #__________________________#
     #regular bullish divergence : price(lower low or equal low) & osci(higher low)
     #hidden bullish divergence : price(higher low) & osci(lower low)
     #regular bearish divergence : price(higher high or equal low) & osci(lower high)
     #hidden bearish divergence : price(lower high) & osci(higher high)
+    #__________________________#
+
+    #retrieving all lows into list
+    #filter all NaNs out of the dataframe then convert to list
+    local_low = df[df['min'].notna() & df['RSI'].notna()]
+    lldf = pd.DataFrame(local_low, columns= ['min', 'RSI'])
+    local_low_list = lldf.values.tolist()
+    print(local_low)
+
+
+    #for local_low in df['min']:
+    #    if(pd.notna(local_low)):
+    #        low.append(local_low)
 
 
 
