@@ -120,17 +120,21 @@ def find_divergences(df):
     lldf = pd.DataFrame(local_low, columns= ['min', 'RSI'])
     local_low_list = lldf.values.tolist()
 
-    #retrieving all lows into list for bearish divs
-    #filter all NaNs out of the dataframe then convert to list
-    local_low = df[df['max'].notna() & df['RSI'].notna()]
-    lldf = pd.DataFrame(local_low, columns= ['min', 'RSI'])
-    local_low_list = lldf.values.tolist()
-
-
-
     #for local_low in df['min']:
     #    if(pd.notna(local_low)):
     #        low.append(local_low)
+
+
+
+    #retrieving all lows into list for bearish divs
+    #filter all NaNs out of the dataframe then convert to list
+    local_high = df[df['max'].notna() & df['RSI'].notna()]
+    lhdf = pd.DataFrame(local_low, columns= ['min', 'RSI'])
+    local_high_list = lhdf.values.tolist()
+
+
+
+
 
 
 
