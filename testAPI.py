@@ -114,12 +114,18 @@ def find_divergences(df):
     #hidden bearish divergence : price(lower high) & osci(higher high)
     #__________________________#
 
-    #retrieving all lows into list
+    #retrieving all lows into list for bullish divs
     #filter all NaNs out of the dataframe then convert to list
     local_low = df[df['min'].notna() & df['RSI'].notna()]
     lldf = pd.DataFrame(local_low, columns= ['min', 'RSI'])
     local_low_list = lldf.values.tolist()
-    print(local_low)
+
+    #retrieving all lows into list for bearish divs
+    #filter all NaNs out of the dataframe then convert to list
+    local_low = df[df['max'].notna() & df['RSI'].notna()]
+    lldf = pd.DataFrame(local_low, columns= ['min', 'RSI'])
+    local_low_list = lldf.values.tolist()
+
 
 
     #for local_low in df['min']:
