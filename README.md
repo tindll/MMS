@@ -13,25 +13,15 @@ The python code also produces charts (as seen below) and I would like to make a 
 
 
 Currently working on bullish RSI divergences : (currently around 66% are correct) -- needs tweaking -- understatement
-ex: "bullish rsi divergence found @low n° 0
-[55341.27, 28.6233581015521] ->
-[54937.27, 33.13886849423598]
-bullish rsi divergence found @low n° 6
-[56026.83, 35.85173667301406] ->
-[55875.51, 37.22766941713545]
-bullish rsi divergence found @low n° 10
-[49801.23, 24.515514371037156] ->
-[49171.76, 32.624704007384494]
-bullish rsi divergence found @low n° 18
-[49444.7, 39.2708812295124] ->
-[49322.03, 40.24998175626117]
-bullish rsi divergence found @low n° 24
-[47144.66, 31.33744764904344] ->
-[46762.99, 32.73156245229599]
-bullish rsi divergence found @low n° 28
-[44104.07, 18.841546334527024] ->
-[42915.46, 25.684385612563375]"
-
+ex: "bullish rsi divergence found @low n° 4
+[49631.32, 16.75849322418405] ->
+[49171.76, 32.62500481708079]
+bullish rsi divergence found @low n° 13
+[47144.66, 31.33744771493427] ->
+[46762.99, 32.73156249726304]
+bullish rsi divergence found @low n° 15
+[44104.07, 18.84154633029067] ->
+[42915.46, 25.68438561217104]
 
 # TODO - 04/05/21
 short term: code a long/short signal
