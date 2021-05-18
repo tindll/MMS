@@ -47,7 +47,7 @@ def create_plot(df):
     #apd = mpf.make_addplot(localow,type='scatter',markersize=600,marker='^')
     #mpf.plot(df,addplot=apd)
 
-    mpf.plot(df, type='candle', axtitle = "BTCUSDT 15M", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
+    mpf.plot(df, type='candle', axtitle = "BTCUSDT 30M (7D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
 
 
 def valuesforDF():
@@ -110,7 +110,7 @@ def find_divergences(df):
     #__________________________#
     #regular bullish divergence : price(lower low or equal low) & osci(higher low)
     #hidden bullish divergence : price(higher low) & osci(lower low)
-    #regular bearish divergence : price(higher high or equal low) & osci(lower high)
+    #regular bearish divergence : price(higher high or equal high) & osci(lower high)
     #hidden bearish divergence : price(lower high) & osci(higher high)
     #__________________________#
 
@@ -120,7 +120,14 @@ def find_divergences(df):
     lldf = pd.DataFrame(local_low, columns= ['min', 'RSI'])
     local_low_list = lldf.values.tolist()
 
-    #for local_low in df['min']:
+    #print(local_low_list)
+
+    #iterate through nested list looking for lower lows or higher lows
+    for index, value in enumerate(local_low_list[:-1]):
+        
+        print(local_low_list[index][0])
+
+    #for local_low in df['min']: i also have to test if rsi diff 0
     #    if(pd.notna(local_low)):
     #        low.append(local_low)
 
