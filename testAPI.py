@@ -87,9 +87,9 @@ def valuesforDF():
     #order in iloc filters for noise
     #price
     #plotting local lows for price
-    df['min'] = df.iloc[argrelextrema(df.close.values, np.less_equal,order=3)[0]]['close']
+    df['min'] = df.iloc[argrelextrema(df.close.values, np.less_equal,order=(5))[0]]['close']
     #plotting local highs for price
-    df['max'] = df.iloc[argrelextrema(df.close.values, np.greater_equal,order=3)[0]]['close']
+    df['max'] = df.iloc[argrelextrema(df.close.values, np.greater_equal,order=5)[0]]['close']
 
     #oscilator
     #plotting rsi values at price local low/high
@@ -120,12 +120,13 @@ def find_divergences(df):
     lldf = pd.DataFrame(local_low, columns= ['min', 'RSI'])
     local_low_list = lldf.values.tolist()
 
+    print(local_low)
     #iterate through nested list looking for lower lows or higher lows
     for index, value in enumerate(local_low_list[:-1]):
         #going to test looking for regular bullish divergence first
         if(local_low_list[index][0]>=local_low_list[index+1][0]): #if price makes lower low
             if(local_low_list[index][1]<local_low_list[index+1][1]):
-                print("bullish rsi divergence found @low n°",index)
+                print("bullish rsi divergence found @low n°",index+2) #+2 because first low isnt in DF 
                 print(local_low_list[index],"->")
                 print(local_low_list[index+1])
     #for local_low in df['min']: i also have to test if rsi diff 0
