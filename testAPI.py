@@ -39,8 +39,8 @@ def create_plot(df):
             mpf.make_addplot(df["MACD_signal"], panel=3, color='orange'),
             mpf.make_addplot(df["min"],type='scatter',markersize=25,color='red',marker='^'),
             mpf.make_addplot(df["max"],type='scatter',markersize=25,color='green',marker='v'),
-            mpf.make_addplot(df["RSImin"],type='scatter',panel='lower',markersize=25,color='red',marker='^'),
-            mpf.make_addplot(df["RSImax"],type='scatter',panel='lower',markersize=25,color='green',marker='v')
+            #mpf.make_addplot(df["RSImin"],type='scatter',panel='lower',markersize=25,color='red',marker='^'),
+            #mpf.make_addplot(df["RSImax"],type='scatter',panel='lower',markersize=25,color='green',marker='v')
 
           ]
     #localow =df["min"]
@@ -114,26 +114,27 @@ def find_divergences(df):
     #hidden bearish divergence : price(lower high) & osci(higher high)
     #__________________________#
 
-    #retrieving all lows into list for bullish divs
+    #retrieving all lows into list for BULLISH divs
     #filter all NaNs out of the dataframe then convert to list
     local_low = df[df['min'].notna() & df['RSI'].notna()]
     lldf = pd.DataFrame(local_low, columns= ['min', 'RSI'])
     local_low_list = lldf.values.tolist()
 
-    #print(local_low_list)
-
     #iterate through nested list looking for lower lows or higher lows
     for index, value in enumerate(local_low_list[:-1]):
-        
-        print(local_low_list[index][0])
-
+        #going to test looking for regular bullish divergence first
+        if(local_low_list[index][0]>=local_low_list[index+1][0]): #if price makes lower low
+            if(local_low_list[index][1]<local_low_list[index+1][1]):
+                print("bullish rsi divergence found @low n°",index)
+                print(local_low_list[index],"->")
+                print(local_low_list[index+1])
     #for local_low in df['min']: i also have to test if rsi diff 0
     #    if(pd.notna(local_low)):
     #        low.append(local_low)
 
 
 
-    #retrieving all lows into list for bearish divs
+    #retrieving all lows into list for BEARISH divs
     #filter all NaNs out of the dataframe then convert to list
     local_high = df[df['max'].notna() & df['RSI'].notna()]
     lhdf = pd.DataFrame(local_low, columns= ['min', 'RSI'])
