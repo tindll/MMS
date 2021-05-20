@@ -47,13 +47,13 @@ def create_plot(df):
     #apd = mpf.make_addplot(localow,type='scatter',markersize=600,marker='^')
     #mpf.plot(df,addplot=apd)
 
-    mpf.plot(df, type='candle', axtitle = "BTCUSDT 30M (7D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
+    mpf.plot(df, type='candle', axtitle = "ETHUSDT 1H (7D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
 
 
 def valuesforDF():
     #fills dataframe with information : open, close, etc... & rsi, macd, bbands
     open,high,low,close,time,pandasdti,volume = [],[],[],[],[],[],[]
-    for kline in client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_30MINUTE, "7 day ago UTC"):
+    for kline in client.get_historical_klines("ETHUSDT", Client.KLINE_INTERVAL_1HOUR, "7 day ago UTC"):
         pandasdti.append(pd.to_datetime((datetime.datetime.fromtimestamp(kline[0]/1000).strftime('%Y-%m-%d %H:%M'))))
         open.append(float(kline[1]))
         high.append(float(kline[2]))
@@ -91,7 +91,7 @@ def valuesforDF():
     #plotting local highs for price
     df['max'] = df.iloc[argrelextrema(df.close.values, np.greater_equal,order=5)[0]]['close']
 
-    #oscilator
+    #oscilator (kinda useless now that i think about it)
     #plotting rsi values at price local low/high
     df['RSImin'] = df.iloc[argrelextrema(df.RSI.values, np.less_equal,order=5)[0]]['RSI']
     #plotting local highs for rsi
@@ -123,12 +123,33 @@ def find_divergences(df):
     print(local_low)
     #iterate through nested list looking for lower lows or higher lows
     for index, value in enumerate(local_low_list[:-1]):
+        for index2 :
+            if(local_low_list[index][0]>=local_low_list[index2][0]):
+
+
+
+
         #going to test looking for regular bullish divergence first
-        if(local_low_list[index][0]>=local_low_list[index+1][0]): #if price makes lower low
+        #if price makes lower low -- (only works for immediate neighbours)
+        if(local_low_list[index][0]>=local_low_list[index+1][0]):
+            #if RSI makes higher low
             if(local_low_list[index][1]<local_low_list[index+1][1]):
-                print("bullish rsi divergence found @low n°",index+2) #+2 because first low isnt in DF 
-                print(local_low_list[index],"->")
-                print(local_low_list[index+1])
+                # at first the dataframe has rsi equal to 0, checking that neither are equal to 0
+                if((local_low_list[index][1]!=float(0)) and (local_low_list[index+1][1]!=float(0))):
+                    #need to write this into a json file or something
+                    print("bullish rsi divergence found @low n°",index+1) #+1 because first low isnt in DF
+                    print(local_low_list[index],"->")
+                    print(local_low_list[index+1])
+
+        #need to check for lows that aren't neighbours
+        else:
+            for low in local_low_list(range(index,len(local_low_list))
+
+
+
+
+
+
     #for local_low in df['min']: i also have to test if rsi diff 0
     #    if(pd.notna(local_low)):
     #        low.append(local_low)
