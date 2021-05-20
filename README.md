@@ -26,5 +26,5 @@ bullish rsi divergence found @low n° 11
 [2365.18, 13.690155931966459] ->
 [2230.9, 29.03983155737761]
 
-List of tasks in progress and to do are under the project tab.
+*List of tasks in progress and to do are under the project tab.*
 
