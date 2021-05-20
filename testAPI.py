@@ -45,12 +45,12 @@ def create_plot(df):
 
 
 
-    vls=['2021-05-13 17:00','2021-05-20 12:00']
+
+
+    mpf.plot(df, type='candle', axtitle = "BTCUSDT 1H (7D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
+    vls=['2021-05-13 23:00','2021-05-20 12:00']
     mpf.plot(df,vlines=dict(vlines=vls,colors=('r','g')))
     mpf.plot(df,vlines=dict(vlines=vls,colors='c'))
-    
-    mpf.plot(df, type='candle', axtitle = "BTCUSDT 1H (7D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
-    mpf.plot(df, alines=ap)
 
 def valuesforDF():
     #fills dataframe with information : open, close, etc... & rsi, macd, bbands
@@ -123,56 +123,43 @@ def find_divergences(df):
     lldf = pd.DataFrame(local_low, columns= ['min', 'RSI'])
     local_low_list = lldf.values.tolist()
 
-    print(local_low)
+    #print(local_low)
     #iterate through nested list looking for price lower lows and rsi higher lows (neighbours)
     for index, value in enumerate(local_low_list[:-1]):
         for index2 in list(range(index,len(local_low_list)-1)):
-            if(local_low_list[index][0]>=local_low_list[index2+1][0]):
+            if(local_low_list[index][0]>local_low_list[index2+1][0]):
                 if(local_low_list[index][1]<local_low_list[index2+1][1]):
                     if((local_low_list[index][1]!=float(0)) and (local_low_list[index+1][1]!=float(0))):
-                        print("regular bullish rsi divergence found @low n°",index+1)
+                        print("regular bullish divergence found @low n°",index+1)
+                        print(local_low_list[index],"->")
+                        print(local_low_list[index2+1])
+            else :
+                if(local_low_list[index][1]>local_low_list[index2+1][1]):
+                    if((local_low_list[index][1]!=float(0)) and (local_low_list[index+1][1]!=float(0))):
+                        print("hidden bullish divergence found @low n°",index+1)
                         print(local_low_list[index],"->")
                         print(local_low_list[index2+1])
 
-
-
-
-        #old version -- only works with direct neighbours
-        #going to test looking for regular bullish divergence first
-        #if price makes lower low -- (only works for immediate neighbours)
-        #if(local_low_list[index][0]>=local_low_list[index+1][0]):
-            #if RSI makes higher low
-        #    if(local_low_list[index][1]<local_low_list[index+1][1]):
-                # at first the dataframe has rsi equal to 0, checking that neither are equal to 0
-        #        if((local_low_list[index][1]!=float(0)) and (local_low_list[index+1][1]!=float(0))):
-                    #need to write this into a json file or something
-        #            print("bullish rsi divergence found @low n°",index+1) #+1 because first low isnt in DF
-        #            print(local_low_list[index],"->")
-        #            print(local_low_list[index+1])
-
-        #need to check for lows that aren't neighbours
-        #else:
-        #    for low in local_low_list(range(index,len(local_low_list))
-
-
-
-
-
-
-    #for local_low in df['min']: i also have to test if rsi diff 0
-    #    if(pd.notna(local_low)):
-    #        low.append(local_low)
-
-
-
-    #retrieving all lows into list for BEARISH divs
-    #filter all NaNs out of the dataframe then convert to list
-    local_high = df[df['max'].notna() & df['RSI'].notna()]
-    lhdf = pd.DataFrame(local_low, columns= ['min', 'RSI'])
+    #retrieving all highs into list for BEARISH divs
+    local_high = df[df['max'].notna() & df['RSI'].notna()& df['BB_MIDDLE'].notna()]
+    lhdf = pd.DataFrame(local_high, columns= ['max', 'RSI'])
     local_high_list = lhdf.values.tolist()
+    print(local_high)#purely for testing purposes
 
-
-
+    for index, value in enumerate(local_high_list[:-1]):
+        for index2 in list(range(index,len(local_high_list)-1)):
+            if(local_high_list[index][0]<local_high_list[index2+1][0]):
+                if(local_high_list[index][1]>local_high_list[index2+1][1]):
+                    if((local_high_list[index][1]!=float(0)) and (local_high_list[index+1][1]!=float(0))):
+                        print("regular bearish divergence found @high n°",index+1)
+                        print(local_high_list[index],"->")
+                        print(local_high_list[index2+1])
+            else :
+                if(local_high_list[index][1]<local_high_list[index2+1][1]):
+                    if((local_high_list[index][1]!=float(0)) and (local_high_list[index+1][1]!=float(0))):
+                        print("hidden bearish divergence found @high n°",index+1)
+                        print(local_high_list[index],"->")
+                        print(local_high_list[index2+1])
 
 
 
