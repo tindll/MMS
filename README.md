@@ -26,11 +26,5 @@ bullish rsi divergence found @low n° 11
 [2365.18, 13.690155931966459] ->
 [2230.9, 29.03983155737761]
 
-# TODO - 04/05/21
-short term: code a long/short signal
-
-long term: learn more about ML, figuring out tensorflow
-
-# TODO - 28/04/21
-figure out an API to use, how to use it
+List of tasks in progress and to do are under the project tab.
 
