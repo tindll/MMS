@@ -123,19 +123,23 @@ def find_divergences(df):
     for index, value in enumerate(local_low_list[:-1]):
         #print(df.index.iloc[0])
         #print(local_low['datetime'].iloc[index])
-        for index2 in list(range(index,len(local_low_list)-1)):
-            if(local_low_list[index][0]>local_low_list[index2+1][0]):
-                if(local_low_list[index][1]<local_low_list[index2+1][1]):
+        foundBelowLine = False
+        for index2 in list(range(index+1,len(local_low_list)-1)):
+            if(local_low_list[index][0]>local_low_list[index2+1][0]):   #price makes lower low
+                if(local_low_list[index][1]<local_low_list[index2+1][1]): #rsi makes higher low
                         slope = (local_low_list[index2+1][0]-local_low_list[index][0])/(unixTIME_EQ[index2+1]-unixTIME_EQ[index])
                         y_intercept= local_low_list[index][0] - slope*unixTIME_EQ[index]
                         for index3 in range(index,index2):
-                            foundBelowLine = False
                             if ((local_low_list[index3][0]-(slope*unixTIME_EQ[index3]+y_intercept))<0):
                                 foundBelowLine= True
+                                print("the point ",index3, " // ", local_low_list[index3]," // is below the line from", index, " to ",index2)
+                                print((local_low_list[index3][0]-(slope*unixTIME_EQ[index3]+y_intercept)))
+                                print("_________________________________")
                         if not foundBelowLine:
                             print("regular bullish divergence found @low n°",index+1, " to ", index2+1)
                             print(local_low_list[index],"->")
                             print(local_low_list[index2+1])
+
             else :
                 if(local_low_list[index][1]>local_low_list[index2+1][1]):
                         print("hidden bullish divergence found @low n°",index+1)
@@ -152,15 +156,16 @@ def find_divergences(df):
         for index2 in list(range(index,len(local_high_list)-1)):
             if(local_high_list[index][0]<local_high_list[index2+1][0]):
                 if(local_high_list[index][1]>local_high_list[index2+1][1]):
-                        print("regular bearish divergence found @high n°",index+1)
-                        print(local_high_list[index],"->")
-                        print(local_high_list[index2+1])
+                        #print("regular bearish divergence found @high n°",index+1)
+                        #print(local_high_list[index],"->")
+                        #print(local_high_list[index2+1])
+                        print(" ")
             else :
                 if(local_high_list[index][1]<local_high_list[index2+1][1]):
-                        print("hidden bearish divergence found @high n°",index+1)
-                        print(local_high_list[index],"->")
-                        print(local_high_list[index2+1])
-
+                        #print("hidden bearish divergence found @high n°",index+1)
+                        #print(local_high_list[index],"->")
+                        #print(local_high_list[index2+1])
+                        print(" ")
 
 
 
