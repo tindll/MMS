@@ -21,7 +21,7 @@ client = Client(api_key, api_secret)
 print(client.futures_account_balance())
 
 # get latest price from Binance API
-btc_price = client.get_symbol_ticker(symbol="DOGEUSDT")
+btc_price = client.get_symbol_ticker(symbol="ETHUSDT")
 # print full output (dictionary)
 print(btc_price)
 
@@ -44,12 +44,12 @@ def create_plot(df):
             #mpf.make_addplot(df["RSImin"],type='scatter',panel='lower',markersize=25,color='red',marker='^'),
             #mpf.make_addplot(df["RSImax"],type='scatter',panel='lower',markersize=25,color='green',marker='v')
           ]
-    mpf.plot(df, type='candle', axtitle = "DOGEUSDT 1H (7D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
+    mpf.plot(df, type='candle', axtitle = "ETHUSDT 1H (7D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
 
 def valuesforDF():
     #fills dataframe with information : open, close, etc... & rsi, macd, bbands
     open,high,low,close,time,pandasdti,volume = [],[],[],[],[],[],[]
-    for kline in client.get_historical_klines("DOGEUSDT", Client.KLINE_INTERVAL_1HOUR, "7 day ago UTC"):
+    for kline in client.get_historical_klines("ETHUSDT", Client.KLINE_INTERVAL_1HOUR, "7 day ago UTC"):
         pandasdti.append(pd.to_datetime((datetime.datetime.fromtimestamp(kline[0]/1000).strftime('%Y-%m-%d %H:%M'))))
         open.append(float(kline[1]))
         high.append(float(kline[2]))
@@ -84,7 +84,7 @@ def valuesforDF():
     #plotting local lows for price
     df['min'] = df.iloc[argrelextrema(df.close.values, np.less_equal,order=(5))[0]]['close']
     #plotting local highs for price
-    df['max'] = df.iloc[argrelextrema(df.close.values, np.greater_equal,order=5)[0]]['close']
+    df['max'] = df.iloc[argrelextrema(df.close.values, np.greater_equal,order=(5))[0]]['close']
 
     #oscilator (kinda useless now that i think about it)
     #plotting rsi values at price local low/high
@@ -115,13 +115,10 @@ def find_divergences(df):
     lldf = pd.DataFrame(local_low, columns= ['min', 'RSI'])
     local_low_list = lldf.values.tolist()
 
-    print(local_low)
+    #print(local_low)
     unixTIME_EQ =local_low.index.astype(int) / 10**9
     #print(unixTIME_EQ[1])
     #iterate through nested list looking for price lower lows and rsi higher lows (neighbours)
-
-    # y=mx+b
-
     for index, value in enumerate(local_low_list[:-1]):
         #print(df.index.iloc[0])
         #print(local_low['datetime'].iloc[index])
@@ -143,7 +140,9 @@ def find_divergences(df):
                                 #print((local_low_list[index3][0]-(slope*(unixTIME_EQ[index3]-7200)+y_intercept)))
                                 #print("_________________________________")
                         if not foundBelowLineRB:
-                            print("regular bullish divergence found @low n°",index, " to ", index2)
+                            priceDifference = local_low_list[index][0]-local_low_list[index2][0]
+                            RSIDifference = local_low_list[index2][1] - local_low_list[index][1]
+                            print("regular bullish divergence found @low n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
                             print(local_low_list[index]," -> ",local_low_list[index2])
 
             if(local_low_list[index][0]<local_low_list[index2][0]) : #price makes higher low
@@ -154,7 +153,9 @@ def find_divergences(df):
                         if ((local_low_list[index4][0]-(slope*(unixTIME_EQ[index4]-7200)+y_intercept))<0):
                             foundBelowLineHB= True
                     if not foundBelowLineHB:
-                        print("hidden bullish divergence found @low n°",index, " to ", index2)
+                        priceDifference = local_low_list[index2][0]-local_low_list[index][0]
+                        RSIDifference = local_low_list[index][1] - local_low_list[index2][1]
+                        print("hidden bullish divergence found @low n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
                         print(local_low_list[index]," -> ",local_low_list[index2])
 
 
@@ -162,27 +163,51 @@ def find_divergences(df):
     local_high = df[df['max'].notna() & df['RSI'].notna()& df['BB_MIDDLE'].notna()]
     lhdf = pd.DataFrame(local_high, columns= ['max', 'RSI'])
     local_high_list = lhdf.values.tolist()
-    #print(local_high)#purely for testing purposes
-
-    #for index, value in enumerate(local_high_list[:-1]):
-        #for index2 in list(range(index,len(local_high_list)-1)):
-            #if(local_high_list[index][0]<local_high_list[index2+1][0]):
-            #    if(local_high_list[index][1]>local_high_list[index2+1][1]):
-                        #print("regular bearish divergence found @high n°",index+1)
-                        #print(local_high_list[index],"->")
-                        #print(local_high_list[index2+1])
-        #                print(" ")
-        #    else :
-        #        if(local_high_list[index][1]<local_high_list[index2+1][1]):
-                        #print("hidden bearish divergence found @high n°",index+1)
-                        #print(local_high_list[index],"->")
-                        #print(local_high_list[index2+1])
-        #                print(" ")
+    unixTIME_EQHI =local_high.index.astype(int) / 10**9
+    #print(local_high)
+    local_highANDlow = df[(df['max'].notna() | df['min'].notna() ) & df['RSI'].notna()& df['BB_MIDDLE'].notna()]
+    print(local_highANDlow)
 
 
+    for index, value in enumerate(local_high_list[:-1]):
+        foundAboveLineRBe = False
+        foundAboveLineHBe = False
+        for index2 in list(range(index+1,len(local_low_list)-1)):
+            #Regular bearish divergence :
+            if(local_high_list[index][0]<local_high_list[index2][0]):   #price makes higher high
+                if(local_high_list[index][1]>local_high_list[index2][1]): #rsi makes lower high
+                        #print("local_low_list index:",local_low_list[index][0],"local_low_list index2:",local_low_list[index2+1][0])
+                        #print("datetime1:",unixTIME_EQ[index]-7200,"datetime2:",unixTIME_EQ[index2+1]-7200)
+                        slope = (local_high_list[index2][0]-local_high_list[index][0])/((unixTIME_EQHI[index2]-7200)-(unixTIME_EQHI[index]-7200)) # substracing 7200 because of time zone differences 7200s=2h=>time difference to GMT aka unix :)
+                        y_intercept= local_high_list[index][0] - slope*(unixTIME_EQHI[index]-7200)
+                        #print(local_low_list[index][0]," to ",local_low_list[index2+1][0])
+                        for index3 in range(index+1,index2):
+                            if ((local_high_list[index3][0]-(slope*(unixTIME_EQHI[index3]-7200)+y_intercept))>0):
+                                foundAboveLineRBe= True
+                                #print("the point ",index3, " // ", local_low_list[index3]," // is below the line from", index, " to ",index2)
+                                #print((local_low_list[index3][0]-(slope*(unixTIME_EQ[index3]-7200)+y_intercept)))
+                                #print("_________________________________")
+                        if not foundAboveLineRBe:
+                            priceDifference = local_high_list[index2][0]-local_high_list[index][0]
+                            RSIDifference = local_high_list[index][1] - local_high_list[index2][1]
+                            print("regular bearish divergence found @high n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
+                            print(local_high_list[index]," -> ",local_high_list[index2])
 
+            #Hidden bearish divergence :
+            if(local_high_list[index][0]>local_high_list[index2][0]) : #price makes lower high
+                if(local_high_list[index][1]<local_high_list[index2][1]): #rsi makes higher high
+                    slope = (local_high_list[index2][0]-local_high_list[index][0])/((unixTIME_EQHI[index2]-7200)-(unixTIME_EQHI[index]-7200)) # substracing 7200 because of time zone differences 7200s=2h=timeDiff to GMT aka unix :)
+                    y_intercept= local_high_list[index][0] - slope*(unixTIME_EQHI[index]-7200)
+                    for index4 in range(index+1,index2):
+                        if ((local_high_list[index4][0]-(slope*(unixTIME_EQHI[index4]-7200)+y_intercept))>0):
+                            foundAboveLineHBe= True
+                    if not foundAboveLineHBe:
+                        priceDifference = local_high_list[index][0]-local_high_list[index2][0]
+                        RSIDifference = local_high_list[index2][1] - local_high_list[index][1]
+                        print("hidden bearish divergence found @high n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
+                        print(local_high_list[index]," -> ",local_high_list[index2])
 
 valuesforDF()
 
 print("")
-print("execution time: ",datetime.datetime.now() - begin_time) #execution time
+print("run time: ",datetime.datetime.now() - begin_time) #execution time
