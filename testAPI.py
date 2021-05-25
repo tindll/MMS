@@ -124,27 +124,33 @@ def find_divergences(df):
         #print(df.index.iloc[0])
         #print(local_low['datetime'].iloc[index])
         foundBelowLine = False
+        #print(unixTIME_EQ[index])
         for index2 in list(range(index+1,len(local_low_list)-1)):
             if(local_low_list[index][0]>local_low_list[index2+1][0]):   #price makes lower low
                 if(local_low_list[index][1]<local_low_list[index2+1][1]): #rsi makes higher low
-                        slope = (local_low_list[index2+1][0]-local_low_list[index][0])/(unixTIME_EQ[index2+1]-unixTIME_EQ[index])
-                        y_intercept= local_low_list[index][0] - slope*unixTIME_EQ[index]
-                        for index3 in range(index,index2):
-                            if ((local_low_list[index3][0]-(slope*unixTIME_EQ[index3]+y_intercept))<0):
+                        #print("local_low_list index:",local_low_list[index][0],"local_low_list index2:",local_low_list[index2+1][0])
+                        #print("datetime1:",unixTIME_EQ[index]-7200,"datetime2:",unixTIME_EQ[index2+1]-7200)
+                        slope = (local_low_list[index2+1][0]-local_low_list[index][0])/((unixTIME_EQ[index2+1]-7200)-(unixTIME_EQ[index]-7200)) # substracing 7200 because of time zone differences 7200s=2h=timeDiff to GMT aka unix :)
+                        y_intercept= local_low_list[index][0] - slope*(unixTIME_EQ[index]-7200)
+                        #print(slope)
+                        for index3 in range(index+1,index2+1):
+                            if ((local_low_list[index3][0]-(slope*(unixTIME_EQ[index3]-7200)+y_intercept))<0):
                                 foundBelowLine= True
-                                print("the point ",index3, " // ", local_low_list[index3]," // is below the line from", index, " to ",index2)
-                                print((local_low_list[index3][0]-(slope*unixTIME_EQ[index3]+y_intercept)))
-                                print("_________________________________")
+                                #print("the point ",index3, " // ", local_low_list[index3]," // is below the line from", index, " to ",index2+1)
+                                #print((local_low_list[index3][0]-(slope*(unixTIME_EQ[index3]-7200)+y_intercept)))
+                                #print("_________________________________")
                         if not foundBelowLine:
-                            print("regular bullish divergence found @low n°",index+1, " to ", index2+1)
+                            print("regular bullish divergence found @low n°",index, " to ", index2+1)
                             print(local_low_list[index],"->")
                             print(local_low_list[index2+1])
 
-            else :
+
+            elif(local_low_list[index][0]>local_low_list[index2+1][0]) : #price makes higher low
                 if(local_low_list[index][1]>local_low_list[index2+1][1]):
-                        print("hidden bullish divergence found @low n°",index+1)
-                        print(local_low_list[index],"->")
-                        print(local_low_list[index2+1])
+                        #print("hidden bullish divergence found @low n°",index+1)
+                        #print(local_low_list[index],"->")
+                        #print(local_low_list[index2+1])
+                        print("")
 
     #retrieving all highs into list for BEARISH divs
     local_high = df[df['max'].notna() & df['RSI'].notna()& df['BB_MIDDLE'].notna()]
