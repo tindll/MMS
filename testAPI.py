@@ -24,6 +24,8 @@ print(client.futures_account_balance())
 btc_price = client.get_symbol_ticker(symbol="DOGEUSDT")
 # print full output (dictionary)
 print(btc_price)
+
+begin_time = datetime.datetime.now() # want an idea of execution time
 #example for btc_price[symbol or price]
 #{'symbol': 'BTCUSDT', 'price': '9678.08000000'}
 #We can access just the price as follows.
@@ -123,7 +125,8 @@ def find_divergences(df):
     for index, value in enumerate(local_low_list[:-1]):
         #print(df.index.iloc[0])
         #print(local_low['datetime'].iloc[index])
-        foundBelowLine = False
+        foundBelowLineRB = False
+        foundBelowLineHB = False
         #print(unixTIME_EQ[index])
         for index2 in list(range(index+1,len(local_low_list)-1)):
             if(local_low_list[index][0]>local_low_list[index2][0]):   #price makes lower low
@@ -135,28 +138,24 @@ def find_divergences(df):
                         #print(local_low_list[index][0]," to ",local_low_list[index2+1][0])
                         for index3 in range(index+1,index2):
                             if ((local_low_list[index3][0]-(slope*(unixTIME_EQ[index3]-7200)+y_intercept))<0):
-                                foundBelowLine= True
-                                print("the point ",index3, " // ", local_low_list[index3]," // is below the line from", index, " to ",index2)
+                                foundBelowLineRB= True
+                                #print("the point ",index3, " // ", local_low_list[index3]," // is below the line from", index, " to ",index2)
                                 #print((local_low_list[index3][0]-(slope*(unixTIME_EQ[index3]-7200)+y_intercept)))
                                 #print("_________________________________")
-                        if not foundBelowLine:
+                        if not foundBelowLineRB:
                             print("regular bullish divergence found @low n°",index, " to ", index2)
-                            print(local_low_list[index],"->")
-                            print(local_low_list[index2])
+                            print(local_low_list[index]," -> ",local_low_list[index2])
 
-
-            if(local_low_list[index][0]<local_low_list[index2+1][0]) : #price makes higher low
-                if(local_low_list[index][1]>local_low_list[index2+1][1]): #rsi makes lower low
-                    slope = (local_low_list[index2+1][0]-local_low_list[index][0])/((unixTIME_EQ[index2+1]-7200)-(unixTIME_EQ[index]-7200)) # substracing 7200 because of time zone differences 7200s=2h=timeDiff to GMT aka unix :)
+            if(local_low_list[index][0]<local_low_list[index2][0]) : #price makes higher low
+                if(local_low_list[index][1]>local_low_list[index2][1]): #rsi makes lower low
+                    slope = (local_low_list[index2][0]-local_low_list[index][0])/((unixTIME_EQ[index2]-7200)-(unixTIME_EQ[index]-7200)) # substracing 7200 because of time zone differences 7200s=2h=timeDiff to GMT aka unix :)
                     y_intercept= local_low_list[index][0] - slope*(unixTIME_EQ[index]-7200)
-                    for index4 in range(index,index2+1):
-                        if ((local_low_list[index3][0]-(slope*(unixTIME_EQ[index3]-7200)+y_intercept))<0):
-                            foundBelowLine= True
-                    if not foundBelowLine:
-                        print("hidden bullish divergence found @low n°",index+1)
-                        print(local_low_list[index],"->")
-                        print(local_low_list[index2+1])
-
+                    for index4 in range(index+1,index2):
+                        if ((local_low_list[index4][0]-(slope*(unixTIME_EQ[index4]-7200)+y_intercept))<0):
+                            foundBelowLineHB= True
+                    if not foundBelowLineHB:
+                        print("hidden bullish divergence found @low n°",index, " to ", index2)
+                        print(local_low_list[index]," -> ",local_low_list[index2])
 
 
     #retrieving all highs into list for BEARISH divs
@@ -184,3 +183,6 @@ def find_divergences(df):
 
 
 valuesforDF()
+
+print("")
+print("execution time: ",datetime.datetime.now() - begin_time) #execution time
