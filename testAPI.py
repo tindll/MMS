@@ -21,7 +21,7 @@ client = Client(api_key, api_secret)
 print(client.futures_account_balance())
 
 # get latest price from Binance API
-btc_price = client.get_symbol_ticker(symbol="BNBUSDT")
+btc_price = client.get_symbol_ticker(symbol="DOGEUSDT")
 # print full output (dictionary)
 print(btc_price)
 #example for btc_price[symbol or price]
@@ -42,12 +42,12 @@ def create_plot(df):
             #mpf.make_addplot(df["RSImin"],type='scatter',panel='lower',markersize=25,color='red',marker='^'),
             #mpf.make_addplot(df["RSImax"],type='scatter',panel='lower',markersize=25,color='green',marker='v')
           ]
-    mpf.plot(df, type='candle', axtitle = "BNBUSDT 1H (7D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
+    mpf.plot(df, type='candle', axtitle = "DOGEUSDT 1H (7D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
 
 def valuesforDF():
     #fills dataframe with information : open, close, etc... & rsi, macd, bbands
     open,high,low,close,time,pandasdti,volume = [],[],[],[],[],[],[]
-    for kline in client.get_historical_klines("BNBUSDT", Client.KLINE_INTERVAL_1HOUR, "7 day ago UTC"):
+    for kline in client.get_historical_klines("DOGEUSDT", Client.KLINE_INTERVAL_1HOUR, "7 day ago UTC"):
         pandasdti.append(pd.to_datetime((datetime.datetime.fromtimestamp(kline[0]/1000).strftime('%Y-%m-%d %H:%M'))))
         open.append(float(kline[1]))
         high.append(float(kline[2]))
@@ -133,7 +133,7 @@ def find_divergences(df):
                         slope = (local_low_list[index2][0]-local_low_list[index][0])/((unixTIME_EQ[index2]-7200)-(unixTIME_EQ[index]-7200)) # substracing 7200 because of time zone differences 7200s=2h=>time difference to GMT aka unix :)
                         y_intercept= local_low_list[index][0] - slope*(unixTIME_EQ[index]-7200)
                         #print(local_low_list[index][0]," to ",local_low_list[index2+1][0])
-                        for index3 in range(index,index2):
+                        for index3 in range(index+1,index2):
                             if ((local_low_list[index3][0]-(slope*(unixTIME_EQ[index3]-7200)+y_intercept))<0):
                                 foundBelowLine= True
                                 print("the point ",index3, " // ", local_low_list[index3]," // is below the line from", index, " to ",index2)
