@@ -21,7 +21,7 @@ client = Client(api_key, api_secret)
 print(client.futures_account_balance())
 
 # get latest price from Binance API
-btc_price = client.get_symbol_ticker(symbol="BTCUSDT")
+btc_price = client.get_symbol_ticker(symbol="BNBUSDT")
 # print full output (dictionary)
 print(btc_price)
 #example for btc_price[symbol or price]
@@ -42,12 +42,12 @@ def create_plot(df):
             #mpf.make_addplot(df["RSImin"],type='scatter',panel='lower',markersize=25,color='red',marker='^'),
             #mpf.make_addplot(df["RSImax"],type='scatter',panel='lower',markersize=25,color='green',marker='v')
           ]
-    mpf.plot(df, type='candle', axtitle = "BTCUSDT 1H (7D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
+    mpf.plot(df, type='candle', axtitle = "BNBUSDT 1H (7D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
 
 def valuesforDF():
     #fills dataframe with information : open, close, etc... & rsi, macd, bbands
     open,high,low,close,time,pandasdti,volume = [],[],[],[],[],[],[]
-    for kline in client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1HOUR, "7 day ago UTC"):
+    for kline in client.get_historical_klines("BNBUSDT", Client.KLINE_INTERVAL_1HOUR, "7 day ago UTC"):
         pandasdti.append(pd.to_datetime((datetime.datetime.fromtimestamp(kline[0]/1000).strftime('%Y-%m-%d %H:%M'))))
         open.append(float(kline[1]))
         high.append(float(kline[2]))
@@ -93,7 +93,7 @@ def valuesforDF():
 
     find_divergences(df)
     create_plot(df)
-    print(df)
+    #print(df)
     df.to_csv(r'dfCSV.txt', header=None, index=None, sep=',', mode='w+')
 
 
@@ -126,31 +126,38 @@ def find_divergences(df):
         foundBelowLine = False
         #print(unixTIME_EQ[index])
         for index2 in list(range(index+1,len(local_low_list)-1)):
-            if(local_low_list[index][0]>local_low_list[index2+1][0]):   #price makes lower low
-                if(local_low_list[index][1]<local_low_list[index2+1][1]): #rsi makes higher low
+            if(local_low_list[index][0]>local_low_list[index2][0]):   #price makes lower low
+                if(local_low_list[index][1]<local_low_list[index2][1]): #rsi makes higher low
                         #print("local_low_list index:",local_low_list[index][0],"local_low_list index2:",local_low_list[index2+1][0])
                         #print("datetime1:",unixTIME_EQ[index]-7200,"datetime2:",unixTIME_EQ[index2+1]-7200)
-                        slope = (local_low_list[index2+1][0]-local_low_list[index][0])/((unixTIME_EQ[index2+1]-7200)-(unixTIME_EQ[index]-7200)) # substracing 7200 because of time zone differences 7200s=2h=timeDiff to GMT aka unix :)
+                        slope = (local_low_list[index2][0]-local_low_list[index][0])/((unixTIME_EQ[index2]-7200)-(unixTIME_EQ[index]-7200)) # substracing 7200 because of time zone differences 7200s=2h=>time difference to GMT aka unix :)
                         y_intercept= local_low_list[index][0] - slope*(unixTIME_EQ[index]-7200)
-                        #print(slope)
-                        for index3 in range(index+1,index2+1):
+                        #print(local_low_list[index][0]," to ",local_low_list[index2+1][0])
+                        for index3 in range(index,index2):
                             if ((local_low_list[index3][0]-(slope*(unixTIME_EQ[index3]-7200)+y_intercept))<0):
                                 foundBelowLine= True
-                                #print("the point ",index3, " // ", local_low_list[index3]," // is below the line from", index, " to ",index2+1)
+                                print("the point ",index3, " // ", local_low_list[index3]," // is below the line from", index, " to ",index2)
                                 #print((local_low_list[index3][0]-(slope*(unixTIME_EQ[index3]-7200)+y_intercept)))
                                 #print("_________________________________")
                         if not foundBelowLine:
-                            print("regular bullish divergence found @low n°",index, " to ", index2+1)
+                            print("regular bullish divergence found @low n°",index, " to ", index2)
                             print(local_low_list[index],"->")
-                            print(local_low_list[index2+1])
+                            print(local_low_list[index2])
 
 
-            elif(local_low_list[index][0]>local_low_list[index2+1][0]) : #price makes higher low
-                if(local_low_list[index][1]>local_low_list[index2+1][1]):
-                        #print("hidden bullish divergence found @low n°",index+1)
-                        #print(local_low_list[index],"->")
-                        #print(local_low_list[index2+1])
-                        print("")
+            if(local_low_list[index][0]<local_low_list[index2+1][0]) : #price makes higher low
+                if(local_low_list[index][1]>local_low_list[index2+1][1]): #rsi makes lower low
+                    slope = (local_low_list[index2+1][0]-local_low_list[index][0])/((unixTIME_EQ[index2+1]-7200)-(unixTIME_EQ[index]-7200)) # substracing 7200 because of time zone differences 7200s=2h=timeDiff to GMT aka unix :)
+                    y_intercept= local_low_list[index][0] - slope*(unixTIME_EQ[index]-7200)
+                    for index4 in range(index,index2+1):
+                        if ((local_low_list[index3][0]-(slope*(unixTIME_EQ[index3]-7200)+y_intercept))<0):
+                            foundBelowLine= True
+                    if not foundBelowLine:
+                        print("hidden bullish divergence found @low n°",index+1)
+                        print(local_low_list[index],"->")
+                        print(local_low_list[index2+1])
+
+
 
     #retrieving all highs into list for BEARISH divs
     local_high = df[df['max'].notna() & df['RSI'].notna()& df['BB_MIDDLE'].notna()]
@@ -158,20 +165,20 @@ def find_divergences(df):
     local_high_list = lhdf.values.tolist()
     #print(local_high)#purely for testing purposes
 
-    for index, value in enumerate(local_high_list[:-1]):
-        for index2 in list(range(index,len(local_high_list)-1)):
-            if(local_high_list[index][0]<local_high_list[index2+1][0]):
-                if(local_high_list[index][1]>local_high_list[index2+1][1]):
+    #for index, value in enumerate(local_high_list[:-1]):
+        #for index2 in list(range(index,len(local_high_list)-1)):
+            #if(local_high_list[index][0]<local_high_list[index2+1][0]):
+            #    if(local_high_list[index][1]>local_high_list[index2+1][1]):
                         #print("regular bearish divergence found @high n°",index+1)
                         #print(local_high_list[index],"->")
                         #print(local_high_list[index2+1])
-                        print(" ")
-            else :
-                if(local_high_list[index][1]<local_high_list[index2+1][1]):
+        #                print(" ")
+        #    else :
+        #        if(local_high_list[index][1]<local_high_list[index2+1][1]):
                         #print("hidden bearish divergence found @high n°",index+1)
                         #print(local_high_list[index],"->")
                         #print(local_high_list[index2+1])
-                        print(" ")
+        #                print(" ")
 
 
 
