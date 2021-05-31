@@ -21,7 +21,7 @@ client = Client(api_key, api_secret)
 print(client.futures_account_balance())
 
 # get latest price from Binance API
-btc_price = client.get_symbol_ticker(symbol="ETHUSDT")
+btc_price = client.get_symbol_ticker(symbol="BTCUSDT")
 # print full output (dictionary)
 print(btc_price)
 
@@ -44,12 +44,12 @@ def create_plot(df):
             #mpf.make_addplot(df["RSImin"],type='scatter',panel='lower',markersize=25,color='red',marker='^'),
             #mpf.make_addplot(df["RSImax"],type='scatter',panel='lower',markersize=25,color='green',marker='v')
           ]
-    mpf.plot(df, type='candle', axtitle = "ETHUSDT 1H (7D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
+    mpf.plot(df, type='candle', axtitle = "BTCUSDT 1H (7D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
 
 def valuesforDF():
     #fills dataframe with information : open, close, etc... & rsi, macd, bbands
     open,high,low,close,time,pandasdti,volume = [],[],[],[],[],[],[]
-    for kline in client.get_historical_klines("ETHUSDT", Client.KLINE_INTERVAL_1HOUR, "7 day ago UTC"):
+    for kline in client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_15MINUTE, "3 day ago UTC"):
         pandasdti.append(pd.to_datetime((datetime.datetime.fromtimestamp(kline[0]/1000).strftime('%Y-%m-%d %H:%M'))))
         open.append(float(kline[1]))
         high.append(float(kline[2]))
@@ -78,25 +78,34 @@ def valuesforDF():
     df['RSI'] = RSI
 
     #dataframe information for divergences (find_divergences())
+    # finds local highs/ local lows and filters noise
     #__________________________________________________________#
-    #order in iloc filters for noise
-    #price
     #plotting local lows for price
     df['min'] = df.iloc[argrelextrema(df.close.values, np.less_equal,order=(5))[0]]['close']
     #plotting local highs for price
     df['max'] = df.iloc[argrelextrema(df.close.values, np.greater_equal,order=(5))[0]]['close']
 
-    #oscilator (kinda useless now that i think about it)
     #plotting rsi values at price local low/high
     df['RSImin'] = df.iloc[argrelextrema(df.RSI.values, np.less_equal,order=5)[0]]['RSI']
     #plotting local highs for rsi
     df['RSImax'] = df.iloc[argrelextrema(df.RSI.values, np.greater_equal,order=5)[0]]['RSI']
     #__________________________________________________________#
 
+    #creating dataframe for 
+
+
     find_divergences(df)
+    find_macd_crossovers()
     create_plot(df)
-    #print(df)
+
     df.to_csv(r'dfCSV.txt', header=None, index=None, sep=',', mode='w+')
+
+
+def find_macd_crossovers():
+    #function to find MACD crossovers
+    # !! only to be used in combination with another indicator !! 
+    # potential bullish signal: when MACD crosses up over signal line
+    # potential bearish signal : when MACD crosses below signal line
 
 
 def find_divergences(df):
@@ -172,7 +181,7 @@ def find_divergences(df):
     for index, value in enumerate(local_high_list[:-1]):
         foundAboveLineRBe = False
         foundAboveLineHBe = False
-        for index2 in list(range(index+1,len(local_low_list)-1)):
+        for index2 in list(range(index+1,len(local_high_list)-1)):
             #Regular bearish divergence :
             if(local_high_list[index][0]<local_high_list[index2][0]):   #price makes higher high
                 if(local_high_list[index][1]>local_high_list[index2][1]): #rsi makes lower high
