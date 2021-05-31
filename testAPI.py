@@ -49,7 +49,7 @@ def create_plot(df):
 def valuesforDF():
     #fills dataframe with information : open, close, etc... & rsi, macd, bbands
     open,high,low,close,time,pandasdti,volume = [],[],[],[],[],[],[]
-    for kline in client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_15MINUTE, "3 day ago UTC"):
+    for kline in client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1HOUR, "7 day ago UTC"):
         pandasdti.append(pd.to_datetime((datetime.datetime.fromtimestamp(kline[0]/1000).strftime('%Y-%m-%d %H:%M'))))
         open.append(float(kline[1]))
         high.append(float(kline[2]))
@@ -94,19 +94,36 @@ def valuesforDF():
     #creating dataframe for 
 
 
+    #calling to indictor functions
     find_divergences(df)
-    find_macd_crossovers()
+    find_macd_signalCrossovers(df)
+    
+    
+    #call to the function that creates the graph
     create_plot(df)
 
+    #creating CSV file from the dataframe
     df.to_csv(r'dfCSV.txt', header=None, index=None, sep=',', mode='w+')
 
 
-def find_macd_crossovers():
+def find_macd_signalCrossovers(df):
     #function to find MACD crossovers
-    # !! only to be used in combination with another indicator !! 
+    # !! only to be used in combination with another indicator !! & work best in strong trending markets (also it's lagging because ur dealing with MAs) 
     # potential bullish signal: when MACD crosses up over signal line
     # potential bearish signal : when MACD crosses below signal line
-
+    # MACD -> red line on chart   || signal -> orange line on chart
+    # note : i want to df_crossovers.loc[(df_crossovers['MACD']==df_crossovers['MACD_signal'])], but i can't because it only keeps hourly macd values and won't find crossovers, might have to iterate through :(
+    df_crossovers = df[['MACD','MACD_signal']]
+    crossover = '' #declaring here because of first iteration
+    for row in df_crossovers.itertuples(): #ugly code, need to find a better way to do this
+        if(row.MACD>row.MACD_signal):
+            if(crossover=='DOWN'):
+                print('bearish crossover @', row.index)
+            crossover = 'UP'
+        else : 
+            if(crossover=='UP'):
+                print('bullish crossover @', row.index)
+            crossover = 'DOWN'
 
 def find_divergences(df):
     #ALL TYPES OF DIVERGENCES :#
@@ -129,30 +146,21 @@ def find_divergences(df):
     #print(unixTIME_EQ[1])
     #iterate through nested list looking for price lower lows and rsi higher lows (neighbours)
     for index, value in enumerate(local_low_list[:-1]):
-        #print(df.index.iloc[0])
-        #print(local_low['datetime'].iloc[index])
         foundBelowLineRB = False
         foundBelowLineHB = False
-        #print(unixTIME_EQ[index])
         for index2 in list(range(index+1,len(local_low_list)-1)):
             if(local_low_list[index][0]>local_low_list[index2][0]):   #price makes lower low
                 if(local_low_list[index][1]<local_low_list[index2][1]): #rsi makes higher low
-                        #print("local_low_list index:",local_low_list[index][0],"local_low_list index2:",local_low_list[index2+1][0])
-                        #print("datetime1:",unixTIME_EQ[index]-7200,"datetime2:",unixTIME_EQ[index2+1]-7200)
                         slope = (local_low_list[index2][0]-local_low_list[index][0])/((unixTIME_EQ[index2]-7200)-(unixTIME_EQ[index]-7200)) # substracing 7200 because of time zone differences 7200s=2h=>time difference to GMT aka unix :)
                         y_intercept= local_low_list[index][0] - slope*(unixTIME_EQ[index]-7200)
-                        #print(local_low_list[index][0]," to ",local_low_list[index2+1][0])
                         for index3 in range(index+1,index2):
                             if ((local_low_list[index3][0]-(slope*(unixTIME_EQ[index3]-7200)+y_intercept))<0):
                                 foundBelowLineRB= True
-                                #print("the point ",index3, " // ", local_low_list[index3]," // is below the line from", index, " to ",index2)
-                                #print((local_low_list[index3][0]-(slope*(unixTIME_EQ[index3]-7200)+y_intercept)))
-                                #print("_________________________________")
                         if not foundBelowLineRB:
                             priceDifference = local_low_list[index][0]-local_low_list[index2][0]
                             RSIDifference = local_low_list[index2][1] - local_low_list[index][1]
-                            print("regular bullish divergence found @low n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
-                            print(local_low_list[index]," -> ",local_low_list[index2])
+                            #print("regular bullish divergence found @low n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
+                            #print(local_low_list[index]," -> ",local_low_list[index2])
 
             if(local_low_list[index][0]<local_low_list[index2][0]) : #price makes higher low
                 if(local_low_list[index][1]>local_low_list[index2][1]): #rsi makes lower low
@@ -164,8 +172,8 @@ def find_divergences(df):
                     if not foundBelowLineHB:
                         priceDifference = local_low_list[index2][0]-local_low_list[index][0]
                         RSIDifference = local_low_list[index][1] - local_low_list[index2][1]
-                        print("hidden bullish divergence found @low n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
-                        print(local_low_list[index]," -> ",local_low_list[index2])
+                        #print("hidden bullish divergence found @low n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
+                        #print(local_low_list[index]," -> ",local_low_list[index2])
 
 
     #retrieving all highs into list for BEARISH divs
@@ -175,7 +183,7 @@ def find_divergences(df):
     unixTIME_EQHI =local_high.index.astype(int) / 10**9
     #print(local_high)
     local_highANDlow = df[(df['max'].notna() | df['min'].notna() ) & df['RSI'].notna()& df['BB_MIDDLE'].notna()]
-    print(local_highANDlow)
+    #print(local_highANDlow)
 
 
     for index, value in enumerate(local_high_list[:-1]):
@@ -185,8 +193,6 @@ def find_divergences(df):
             #Regular bearish divergence :
             if(local_high_list[index][0]<local_high_list[index2][0]):   #price makes higher high
                 if(local_high_list[index][1]>local_high_list[index2][1]): #rsi makes lower high
-                        #print("local_low_list index:",local_low_list[index][0],"local_low_list index2:",local_low_list[index2+1][0])
-                        #print("datetime1:",unixTIME_EQ[index]-7200,"datetime2:",unixTIME_EQ[index2+1]-7200)
                         slope = (local_high_list[index2][0]-local_high_list[index][0])/((unixTIME_EQHI[index2]-7200)-(unixTIME_EQHI[index]-7200)) # substracing 7200 because of time zone differences 7200s=2h=>time difference to GMT aka unix :)
                         y_intercept= local_high_list[index][0] - slope*(unixTIME_EQHI[index]-7200)
                         #print(local_low_list[index][0]," to ",local_low_list[index2+1][0])
@@ -199,8 +205,8 @@ def find_divergences(df):
                         if not foundAboveLineRBe:
                             priceDifference = local_high_list[index2][0]-local_high_list[index][0]
                             RSIDifference = local_high_list[index][1] - local_high_list[index2][1]
-                            print("regular bearish divergence found @high n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
-                            print(local_high_list[index]," -> ",local_high_list[index2])
+                            #print("regular bearish divergence found @high n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
+                            #print(local_high_list[index]," -> ",local_high_list[index2])
 
             #Hidden bearish divergence :
             if(local_high_list[index][0]>local_high_list[index2][0]) : #price makes lower high
@@ -213,8 +219,8 @@ def find_divergences(df):
                     if not foundAboveLineHBe:
                         priceDifference = local_high_list[index][0]-local_high_list[index2][0]
                         RSIDifference = local_high_list[index2][1] - local_high_list[index][1]
-                        print("hidden bearish divergence found @high n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
-                        print(local_high_list[index]," -> ",local_high_list[index2])
+                        #print("hidden bearish divergence found @high n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
+                        #print(local_high_list[index]," -> ",local_high_list[index2])
 
 valuesforDF()
 
