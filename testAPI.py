@@ -49,7 +49,7 @@ def create_plot(df):
 def valuesforDF():
     #fills dataframe with information : open, close, etc... & rsi, macd, bbands
     open,high,low,close,time,pandasdti,volume = [],[],[],[],[],[],[]
-    for kline in client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1HOUR, "5 days ago UTC"):
+    for kline in client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_15MINUTE, "3 days ago UTC"):
         pandasdti.append(pd.to_datetime((datetime.datetime.fromtimestamp(kline[0]/1000).strftime('%Y-%m-%d %H:%M'))))
         open.append(float(kline[1]))
         high.append(float(kline[2]))
@@ -104,7 +104,7 @@ def valuesforDF():
 
     #calling to indictor functions
     find_divergences(df)
-    find_macd_signalCrossovers(df)
+    #find_macd_signalCrossovers(df)
     dmi_crossover(df)
     
     #call to the function that creates the graph
@@ -164,7 +164,7 @@ def find_divergences(df):
     lldf = pd.DataFrame(local_low, columns= ['min', 'RSI'])
     local_low_list = lldf.values.tolist()
 
-    #print(local_low)
+    print(local_low)
     unixTIME_EQ =local_low.index.astype(int) / 10**9
     #print(unixTIME_EQ[1])
     #iterate through nested list looking for price lower lows and rsi higher lows (neighbours)
