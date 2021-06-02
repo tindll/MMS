@@ -44,12 +44,12 @@ def create_plot(df):
             #mpf.make_addplot(df["RSImin"],type='scatter',panel='lower',markersize=25,color='red',marker='^'),
             #mpf.make_addplot(df["RSImax"],type='scatter',panel='lower',markersize=25,color='green',marker='v')
           ]
-    mpf.plot(df, type='candle', axtitle = "BTCUSDT 1H (7D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
+    mpf.plot(df, type='candle', axtitle = "BTCUSDT 15M (1D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
 
 def valuesforDF():
     #fills dataframe with information : open, close, etc... & rsi, macd, bbands
     open,high,low,close,time,pandasdti,volume = [],[],[],[],[],[],[]
-    for kline in client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1HOUR, "7 day ago UTC"):
+    for kline in client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1HOUR, "5 days ago UTC"):
         pandasdti.append(pd.to_datetime((datetime.datetime.fromtimestamp(kline[0]/1000).strftime('%Y-%m-%d %H:%M'))))
         open.append(float(kline[1]))
         high.append(float(kline[2]))
@@ -77,6 +77,16 @@ def valuesforDF():
     RSI= TA.RSI(df)
     df['RSI'] = RSI
 
+    BBp = TA.PERCENT_B(df)
+    df["BBp"]= BBp
+
+    ADX = TA.ADX(df)
+    df['ADX'] = ADX
+
+    DMI = TA.DMI(df)
+    df['DMIp'] = DMI['DI+']
+    df['DMIm'] = DMI['DI-']
+
     #dataframe information for divergences (find_divergences())
     # finds local highs/ local lows and filters noise
     #__________________________________________________________#
@@ -91,13 +101,11 @@ def valuesforDF():
     df['RSImax'] = df.iloc[argrelextrema(df.RSI.values, np.greater_equal,order=5)[0]]['RSI']
     #__________________________________________________________#
 
-    #creating dataframe for 
-
 
     #calling to indictor functions
     find_divergences(df)
     find_macd_signalCrossovers(df)
-    
+    dmi_crossover(df)
     
     #call to the function that creates the graph
     create_plot(df)
@@ -106,6 +114,21 @@ def valuesforDF():
     df.to_csv(r'dfCSV.txt', header=None, index=None, sep=',', mode='w+')
 
 
+def dmi_crossover(df):
+    dmi_cross = df[['ADX','DMIp','DMIm','close']]
+    dmi_cross = dmi_cross[(dmi_cross['ADX']>25)  & (dmi_cross['ADX']<100) & (dmi_cross['ADX'].notna()) ] #filtering dataframe where ADX is >25 ; only look for positions if trend isn't weak
+    print(dmi_cross)
+    dmicrossover = '' #declaring here because of first iteration
+    for row in dmi_cross.itertuples(): #ugly code, need to find a better way to do this
+        if(row.DMIp>row.DMIm):
+            if(dmicrossover=='BELOW'): #filtering signals with %BB
+                print("potential bullish trend reversal @ ",row.Index,'@', row.close)
+            dmicrossover = 'ABOVE'
+        else : 
+            if(dmicrossover=='ABOVE'): #filtering signals with %BB
+                print("potential bearish trend reversal @ ",row.Index,'@', row.close)
+            dmicrossover = 'BELOW'
+
 def find_macd_signalCrossovers(df):
     #function to find MACD crossovers
     # !! only to be used in combination with another indicator !! & work best in strong trending markets (also it's lagging because ur dealing with MAs) 
@@ -113,16 +136,16 @@ def find_macd_signalCrossovers(df):
     # potential bearish signal : when MACD crosses below signal line
     # MACD -> red line on chart   || signal -> orange line on chart
     # note : i want to df_crossovers.loc[(df_crossovers['MACD']==df_crossovers['MACD_signal'])], but i can't because it only keeps hourly macd values and won't find crossovers, might have to iterate through :(
-    df_crossovers = df[['MACD','MACD_signal']]
+    df_crossovers = df[['MACD','MACD_signal','close']]
     crossover = '' #declaring here because of first iteration
     for row in df_crossovers.itertuples(): #ugly code, need to find a better way to do this
         if(row.MACD>row.MACD_signal):
-            if(crossover=='DOWN'):
-                print('bearish crossover @', row.index)
+            if(crossover=='DOWN'): #filtering signals with %BB
+                print("bullish crossover @ ",row.Index,'@', row.close)
             crossover = 'UP'
         else : 
-            if(crossover=='UP'):
-                print('bullish crossover @', row.index)
+            if(crossover=='UP'): #filtering signals with %BB
+                print("bearish crossover @ ",row.Index,'@', row.close)
             crossover = 'DOWN'
 
 def find_divergences(df):
