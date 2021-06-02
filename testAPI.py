@@ -3,9 +3,24 @@ import mplfinance as mpf
 import pandas as pd
 import numpy as np
 import datetime
+import sys
+import urllib.request, json 
 from binance.client import Client
 from finta import TA
 from scipy.signal import argrelextrema #for local highs/lows
+
+#checking that we have 3 arguments (the validity of the arguments is tested later)
+if(len(sys.argv)!=3):
+    print("testAPI.py was called with the wrong amount of arguments")
+    sys.exit()
+
+#getting symbol and timeframe from command line
+symbol = sys.argv[1]
+timeframe = sys.argv[2]
+
+
+
+print(symbol,timeframe)
 
 ## setting up binance API from environment variables ##
 api_key = os.environ.get('API_KEY')
@@ -19,6 +34,8 @@ client = Client(api_key, api_secret)
 
 # get balances for futures account
 print(client.futures_account_balance())
+
+#print(client.get_top_long_short_positions('BTCUSDT','15m'))
 
 # get latest price from Binance API
 btc_price = client.get_symbol_ticker(symbol="BTCUSDT")
@@ -113,7 +130,7 @@ def valuesforDF():
     #creating CSV file from the dataframe
     df.to_csv(r'dfCSV.txt', header=None, index=None, sep=',', mode='w+')
 
-
+#this function and macd crossovers could just be one function
 def dmi_crossover(df):
     dmi_cross = df[['ADX','DMIp','DMIm','close']]
     dmi_cross = dmi_cross[(dmi_cross['ADX']>25)  & (dmi_cross['ADX']<100) & (dmi_cross['ADX'].notna()) ] #filtering dataframe where ADX is >25 ; only look for positions if trend isn't weak
@@ -148,6 +165,8 @@ def find_macd_signalCrossovers(df):
                 print("bearish crossover @ ",row.Index,'@', row.close)
             crossover = 'DOWN'
 
+
+#find divergences could be generalized to detect divergences on all indicators not just RSI
 def find_divergences(df):
     #ALL TYPES OF DIVERGENCES :#
     #__________________________#
@@ -246,6 +265,11 @@ def find_divergences(df):
                         #print(local_high_list[index]," -> ",local_high_list[index2])
 
 valuesforDF()
+
+#def ():
+
+
+
 
 print("")
 print("run time: ",datetime.datetime.now() - begin_time) #execution time
