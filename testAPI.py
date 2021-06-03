@@ -15,38 +15,39 @@ if(len(sys.argv)!=3):
     sys.exit()
 
 #getting symbol and timeframe from command line
+#this also checks whether the symbol exists on binance 
+#retrieve LONG/SHORT ratio from binance's API
 symbol = sys.argv[1]
 timeframe = sys.argv[2]
 
+try: 
+    url = urllib.request.urlopen("https://fapi.binance.com/futures/data/globalLongShortAccountRatio?symbol="+symbol+"&period="+timeframe)
+except urllib.error.HTTPError as exception:
+    print('____________________________________________________')
+    print("There was an error with the symbol or the timeframe")
+    print("Please check that your syntax was of the form 'BTCUSDT' or 'ETHUSDT'... for the symbol")
+    print("And '5m' or '15m' or '1h'... for the timeframe")
+    print('____________________________________________________')
+    sys.exit()
 
-
-print(symbol,timeframe)
+#if symbol and timeframe were valid, load short long ratio information from json file
+SHORT_LONGjson = json.loads(url.read().decode())
 
 ## setting up binance API from environment variables ##
 api_key = os.environ.get('API_KEY')
 api_secret = os.environ.get('API_SECRET')
 client = Client(api_key, api_secret)
 
-# get balances for all assets & some account information
-#print(client.get_account())
-# get balance for a specific asset only (BTC)
-#print(client.get_asset_balance(asset='BTC'))
-
 # get balances for futures account
-print(client.futures_account_balance())
-
-#print(client.get_top_long_short_positions('BTCUSDT','15m'))
+#print(client.futures_account_balance())
 
 # get latest price from Binance API
-btc_price = client.get_symbol_ticker(symbol="BTCUSDT")
+symbol_price = client.get_symbol_ticker(symbol=symbol)
 # print full output (dictionary)
-print(btc_price)
+print(symbol_price)
 
-begin_time = datetime.datetime.now() # want an idea of execution time
-#example for btc_price[symbol or price]
-#{'symbol': 'BTCUSDT', 'price': '9678.08000000'}
-#We can access just the price as follows.
-#print(btc_price["price"])
+begin_time = datetime.datetime.now() #for execution time
+
 def create_plot(df):
     mc = mpf.make_marketcolors(up='w',down='b')
     s  = mpf.make_mpf_style(marketcolors=mc)
@@ -58,15 +59,13 @@ def create_plot(df):
             mpf.make_addplot(df["MACD_signal"], panel=3, color='orange'),
             mpf.make_addplot(df["min"],type='scatter',markersize=25,color='red',marker='^'),
             mpf.make_addplot(df["max"],type='scatter',markersize=25,color='green',marker='v'),
-            #mpf.make_addplot(df["RSImin"],type='scatter',panel='lower',markersize=25,color='red',marker='^'),
-            #mpf.make_addplot(df["RSImax"],type='scatter',panel='lower',markersize=25,color='green',marker='v')
           ]
-    mpf.plot(df, type='candle', axtitle = "BTCUSDT 15M (1D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
+    mpf.plot(df, type='candle', axtitle = symbol+" "+timeframe +" (3D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
 
 def valuesforDF():
     #fills dataframe with information : open, close, etc... & rsi, macd, bbands
     open,high,low,close,time,pandasdti,volume = [],[],[],[],[],[],[]
-    for kline in client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_15MINUTE, "3 days ago UTC"):
+    for kline in client.get_historical_klines(symbol, timeframe, "3 days ago UTC"):
         pandasdti.append(pd.to_datetime((datetime.datetime.fromtimestamp(kline[0]/1000).strftime('%Y-%m-%d %H:%M'))))
         open.append(float(kline[1]))
         high.append(float(kline[2]))
@@ -120,9 +119,9 @@ def valuesforDF():
 
 
     #calling to indictor functions
-    find_divergences(df)
+    #find_divergences(df)
     #find_macd_signalCrossovers(df)
-    dmi_crossover(df)
+    #dmi_crossover(df)
     
     #call to the function that creates the graph
     create_plot(df)
@@ -131,6 +130,7 @@ def valuesforDF():
     df.to_csv(r'dfCSV.txt', header=None, index=None, sep=',', mode='w+')
 
 #this function and macd crossovers could just be one function
+#also this function isn't working too great
 def dmi_crossover(df):
     dmi_cross = df[['ADX','DMIp','DMIm','close']]
     dmi_cross = dmi_cross[(dmi_cross['ADX']>25)  & (dmi_cross['ADX']<100) & (dmi_cross['ADX'].notna()) ] #filtering dataframe where ADX is >25 ; only look for positions if trend isn't weak
