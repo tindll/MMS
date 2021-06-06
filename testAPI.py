@@ -22,17 +22,28 @@ timeframe = sys.argv[2]
 amountDays = sys.argv[3]
 
 try: 
-    url = urllib.request.urlopen("https://fapi.binance.com/futures/data/globalLongShortAccountRatio?symbol="+symbol+"&period="+timeframe)
+    url = urllib.request.urlopen("https://fapi.binance.com/futures/data/topLongShortPositionRatio?symbol="+symbol+"&period=1h")
 except urllib.error.HTTPError as exception:
     print('____________________________________________________')
-    print("There was an error retrieving the long/short ration from binance")
+    print("There was an error retrieving the long/short ratio from binance")
     print("Please check that your syntax was of the form 'BTCUSDT' or 'ETHUSDT'... for the symbol")
     print("And '5m' or '15m' or '1h'... for the timeframe")
     print('____________________________________________________')
     sys.exit()
 
-#if symbol and timeframe were valid, load short long ratio information from json file
+#if symbol and timeframe were valid, load short/long ratio information from json file
+#getting an idea of where 'big money' has been going for the last ~24 hours
 SHORT_LONGjson = json.loads(url.read().decode())
+averageRatio = 0.0
+ratio_list= [] #for standard deviation calculation
+for key in SHORT_LONGjson:
+    averageRatio+=float(key['longShortRatio']) 
+    ratio_list.append(float(key['longShortRatio']))
+stDev=(np.std(ratio_list, dtype=np.float64))
+averageRatio/=30
+print(averageRatio)
+
+
 
 ## setting up binance API from environment variables ##
 api_key = os.environ.get('API_KEY')
@@ -45,7 +56,7 @@ client = Client(api_key, api_secret)
 # get latest price from Binance API
 symbol_price = client.get_symbol_ticker(symbol=symbol)
 # print full output (dictionary)
-print(symbol_price)
+#print(symbol_price)
 
 begin_time = datetime.datetime.now() #for execution time
 
@@ -125,7 +136,7 @@ def valuesforDF():
     #__________________________________________________________#
 
 
-    #calling to indictor functions
+    #calling to indicator functions
     #find_divergences(df)
     #find_macd_signalCrossovers(df)
     #dmi_crossover(df)
@@ -136,18 +147,6 @@ def valuesforDF():
     #creating CSV file from the dataframe
     df.to_csv(r'dfCSV.txt', header=None, index=None, sep=',', mode='w+')
 
-def stochastic_cross(df):
-    stoch_crossovers = df[['STOCH_K','STOCH_D','close']]
-    crossover = '' #declaring here because of first iteration
-    for row in df_crossovers.itertuples(): #ugly code, need to find a better way to do this
-        if(row.MACD>row.MACD_signal):
-            if(crossover=='DOWN'): #filtering signals with %BB
-                print("bullish crossover @ ",row.Index,'@', row.close)
-            crossover = 'UP'
-        else : 
-            if(crossover=='UP'): #filtering signals with %BB
-                print("bearish crossover @ ",row.Index,'@', row.close)
-            crossover = 'DOWN'
 
 
 
@@ -156,7 +155,6 @@ def stochastic_cross(df):
 def dmi_crossover(df):
     dmi_cross = df[['ADX','DMIp','DMIm','close']]
     dmi_cross = dmi_cross[(dmi_cross['ADX']>25)  & (dmi_cross['ADX']<100) & (dmi_cross['ADX'].notna()) ] #filtering dataframe where ADX is >25 ; only look for positions if trend isn't weak
-    print(dmi_cross)
     dmicrossover = '' #declaring here because of first iteration
     for row in dmi_cross.itertuples(): #ugly code, need to find a better way to do this
         if(row.DMIp>row.DMIm):
@@ -286,15 +284,11 @@ def find_divergences(df):
                         #print("hidden bearish divergence found @high n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
                         #print(local_high_list[index]," -> ",local_high_list[index2])
 
-#def ichimokuCloudSt(df):
-
-
-
 
 
 
 #def patternRecognition (df): 
-#function that looks for patterns 
+#function that looks for chart patterns 
 #
 #  note : (stop loss should be set at lowest point of the pennant)
 # 1. Continuation Chart Patterns
