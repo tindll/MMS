@@ -7,6 +7,7 @@
         "open$": 37858, 
         "close$": 39000,
         "leverageX": 5,
+        "Date": "05/31/2021 - 12:00 AM",
         "tradeReason": [
           "RSI divergence",
           "RSI Overbought",
@@ -20,6 +21,7 @@
         "open$": 2794, 
         "close$": 2500,
         "leverageX": 10,
+        "Date": "06/03/2021 - 9:00 AM",
         "tradeReason": [
           "ADX+DMI cross",
           "BBand>1",

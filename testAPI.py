@@ -10,7 +10,7 @@ from finta import TA
 from scipy.signal import argrelextrema #for local highs/lows
 
 #checking that we have 3 arguments (the validity of the arguments is tested later)
-if(len(sys.argv)!=3):
+if(len(sys.argv)!=4):
     print("testAPI.py was called with the wrong amount of arguments")
     sys.exit()
 
@@ -19,12 +19,13 @@ if(len(sys.argv)!=3):
 #retrieve LONG/SHORT ratio from binance's API
 symbol = sys.argv[1]
 timeframe = sys.argv[2]
+amountDays = sys.argv[3]
 
 try: 
     url = urllib.request.urlopen("https://fapi.binance.com/futures/data/globalLongShortAccountRatio?symbol="+symbol+"&period="+timeframe)
 except urllib.error.HTTPError as exception:
     print('____________________________________________________')
-    print("There was an error with the symbol or the timeframe")
+    print("There was an error retrieving the long/short ration from binance")
     print("Please check that your syntax was of the form 'BTCUSDT' or 'ETHUSDT'... for the symbol")
     print("And '5m' or '15m' or '1h'... for the timeframe")
     print('____________________________________________________')
@@ -60,12 +61,12 @@ def create_plot(df):
             mpf.make_addplot(df["min"],type='scatter',markersize=25,color='red',marker='^'),
             mpf.make_addplot(df["max"],type='scatter',markersize=25,color='green',marker='v'),
           ]
-    mpf.plot(df, type='candle', axtitle = symbol+" "+timeframe +" (3D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
+    mpf.plot(df, type='candle', axtitle = symbol+" "+timeframe +" ("+amountDays+"D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
 
 def valuesforDF():
     #fills dataframe with information : open, close, etc... & rsi, macd, bbands
     open,high,low,close,time,pandasdti,volume = [],[],[],[],[],[],[]
-    for kline in client.get_historical_klines(symbol, timeframe, "3 days ago UTC"):
+    for kline in client.get_historical_klines(symbol, timeframe, amountDays+"days ago UTC"):
         pandasdti.append(pd.to_datetime((datetime.datetime.fromtimestamp(kline[0]/1000).strftime('%Y-%m-%d %H:%M'))))
         open.append(float(kline[1]))
         high.append(float(kline[2]))
@@ -103,6 +104,12 @@ def valuesforDF():
     df['DMIp'] = DMI['DI+']
     df['DMIm'] = DMI['DI-']
 
+    STOCH_K = TA.STOCH(df)
+    STOCH_D = TA.STOCHD(df)
+    df['STOCH_K'] = STOCH_K
+    df['STOCH_D'] = STOCH_D
+
+
     #dataframe information for divergences (find_divergences())
     # finds local highs/ local lows and filters noise
     #__________________________________________________________#
@@ -128,6 +135,21 @@ def valuesforDF():
 
     #creating CSV file from the dataframe
     df.to_csv(r'dfCSV.txt', header=None, index=None, sep=',', mode='w+')
+
+def stochastic_cross(df):
+    stoch_crossovers = df[['STOCH_K','STOCH_D','close']]
+    crossover = '' #declaring here because of first iteration
+    for row in df_crossovers.itertuples(): #ugly code, need to find a better way to do this
+        if(row.MACD>row.MACD_signal):
+            if(crossover=='DOWN'): #filtering signals with %BB
+                print("bullish crossover @ ",row.Index,'@', row.close)
+            crossover = 'UP'
+        else : 
+            if(crossover=='UP'): #filtering signals with %BB
+                print("bearish crossover @ ",row.Index,'@', row.close)
+            crossover = 'DOWN'
+
+
 
 #this function and macd crossovers could just be one function
 #also this function isn't working too great
@@ -264,9 +286,27 @@ def find_divergences(df):
                         #print("hidden bearish divergence found @high n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
                         #print(local_high_list[index]," -> ",local_high_list[index2])
 
-valuesforDF()
+#def ichimokuCloudSt(df):
 
-#def ():
+
+
+
+
+
+#def patternRecognition (df): 
+#function that looks for patterns 
+#
+#  note : (stop loss should be set at lowest point of the pennant)
+# 1. Continuation Chart Patterns
+        #Symmetrical triangle
+        #comprised of LHs & HLs, a symmetrical triangle is a continuation pattern
+        #this function identifies the trend and detects these triangles
+        #and then creates a buy signal on the 3rd low
+        #stop loss should be set at the 1st low
+
+
+
+valuesforDF()
 
 
 
