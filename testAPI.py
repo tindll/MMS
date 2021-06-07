@@ -22,7 +22,7 @@ timeframe = sys.argv[2]
 amountDays = sys.argv[3]
 
 try: 
-    url = urllib.request.urlopen("https://fapi.binance.com/futures/data/topLongShortPositionRatio?symbol="+symbol+"&period=1h")
+    url = urllib.request.urlopen("https://fapi.binance.com/futures/data/topLongShortAccountRatio?symbol="+symbol+"&period=1h")
 except urllib.error.HTTPError as exception:
     print('____________________________________________________')
     print("There was an error retrieving the long/short ratio from binance")
@@ -40,9 +40,18 @@ for key in SHORT_LONGjson:
     averageRatio+=float(key['longShortRatio']) 
     ratio_list.append(float(key['longShortRatio']))
 stDev=(np.std(ratio_list, dtype=np.float64))
+confidence_degree = 0.0
 averageRatio/=30
-print(averageRatio)
 
+if((argrelextrema(np.array(ratio_list), np.greater_equal,order=3)[-1][-1])==29):
+    if(ratio_list[29]>averageRatio): # not right, needs changing
+        print('more longs than usual on '+symbol)
+elif ((argrelextrema(np.array(ratio_list), np.less_equal,order=3)[-1][-1])==29):
+    if(ratio_list[29]<averageRatio):
+        print('more shorts than usual on '+symbol)
+else : print(symbol+' long/short ratio is undecided right now')
+
+# !! need to think about this because argrelextrema will return most recent value sometimes and that's not always a good thing
 
 
 ## setting up binance API from environment variables ##
@@ -137,7 +146,7 @@ def valuesforDF():
 
 
     #calling to indicator functions
-    #find_divergences(df)
+    find_divergences(df)
     #find_macd_signalCrossovers(df)
     #dmi_crossover(df)
     
@@ -146,8 +155,6 @@ def valuesforDF():
 
     #creating CSV file from the dataframe
     df.to_csv(r'dfCSV.txt', header=None, index=None, sep=',', mode='w+')
-
-
 
 
 #this function and macd crossovers could just be one function
@@ -203,14 +210,14 @@ def find_divergences(df):
     lldf = pd.DataFrame(local_low, columns= ['min', 'RSI'])
     local_low_list = lldf.values.tolist()
 
-    print(local_low)
+    #print(local_low)
     unixTIME_EQ =local_low.index.astype(int) / 10**9
     #print(unixTIME_EQ[1])
     #iterate through nested list looking for price lower lows and rsi higher lows (neighbours)
     for index, value in enumerate(local_low_list[:-1]):
         foundBelowLineRB = False
         foundBelowLineHB = False
-        for index2 in list(range(index+1,len(local_low_list)-1)):
+        for index2 in list(range(index+1,len(local_low_list))):
             if(local_low_list[index][0]>local_low_list[index2][0]):   #price makes lower low
                 if(local_low_list[index][1]<local_low_list[index2][1]): #rsi makes higher low
                         slope = (local_low_list[index2][0]-local_low_list[index][0])/((unixTIME_EQ[index2]-7200)-(unixTIME_EQ[index]-7200)) # substracing 7200 because of time zone differences 7200s=2h=>time difference to GMT aka unix :)
@@ -220,9 +227,13 @@ def find_divergences(df):
                                 foundBelowLineRB= True
                         if not foundBelowLineRB:
                             priceDifference = local_low_list[index][0]-local_low_list[index2][0]
-                            RSIDifference = local_low_list[index2][1] - local_low_list[index][1]
+                            RSIDifference = local_low_list[index2][1] - local_low_list[index][1] 
+                            if(df.index[-10]<local_low.index[index2]): #if divergence is recent
+                                print("recent regular bullish divergence found")
                             #print("regular bullish divergence found @low n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
                             #print(local_low_list[index]," -> ",local_low_list[index2])
+                            
+
 
             if(local_low_list[index][0]<local_low_list[index2][0]) : #price makes higher low
                 if(local_low_list[index][1]>local_low_list[index2][1]): #rsi makes lower low
@@ -234,6 +245,8 @@ def find_divergences(df):
                     if not foundBelowLineHB:
                         priceDifference = local_low_list[index2][0]-local_low_list[index][0]
                         RSIDifference = local_low_list[index][1] - local_low_list[index2][1]
+                        if(df.index[-10]<local_low.index[index2]): #if divergence is recent
+                            print("recent hidden bullish divergence found")
                         #print("hidden bullish divergence found @low n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
                         #print(local_low_list[index]," -> ",local_low_list[index2])
 
@@ -251,7 +264,7 @@ def find_divergences(df):
     for index, value in enumerate(local_high_list[:-1]):
         foundAboveLineRBe = False
         foundAboveLineHBe = False
-        for index2 in list(range(index+1,len(local_high_list)-1)):
+        for index2 in list(range(index+1,len(local_high_list))):
             #Regular bearish divergence :
             if(local_high_list[index][0]<local_high_list[index2][0]):   #price makes higher high
                 if(local_high_list[index][1]>local_high_list[index2][1]): #rsi makes lower high
@@ -267,6 +280,9 @@ def find_divergences(df):
                         if not foundAboveLineRBe:
                             priceDifference = local_high_list[index2][0]-local_high_list[index][0]
                             RSIDifference = local_high_list[index][1] - local_high_list[index2][1]
+                            if(df.index[-10]<local_high.index[index2]): #if divergence is recent
+                                print("recent regular bearish divergence found")
+                            
                             #print("regular bearish divergence found @high n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
                             #print(local_high_list[index]," -> ",local_high_list[index2])
 
@@ -281,23 +297,49 @@ def find_divergences(df):
                     if not foundAboveLineHBe:
                         priceDifference = local_high_list[index][0]-local_high_list[index2][0]
                         RSIDifference = local_high_list[index2][1] - local_high_list[index][1]
+                        if(df.index[-10]<local_high.index[index2]): #if divergence is recent
+                            print("recent hidden bearish divergence found")
                         #print("hidden bearish divergence found @high n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
                         #print(local_high_list[index]," -> ",local_high_list[index2])
 
 
 
 
-#def patternRecognition (df): 
+#def patternRecognition (df): # !! meant for higher timeframes only !!
 #function that looks for chart patterns 
 #
-#  note : (stop loss should be set at lowest point of the pennant)
+#  note : (stop loss should be set at lowest point of the triangle)
 # 1. Continuation Chart Patterns
         #Symmetrical triangle
         #comprised of LHs & HLs, a symmetrical triangle is a continuation pattern
-        #this function identifies the trend and detects these triangles
+        #this function identifies the trend and tries to find these patterns forming
         #and then creates a buy signal on the 3rd low
         #stop loss should be set at the 1st low
+        #!!check volume to make sure!!
+    
 
+
+
+        #Bull flags
+        #comprised of LHs & LLs, a bull flag is a continuation pattern
+        #this function identifies the trend and tries to find these patterns forming
+
+        #Bear flags
+        #comprised of HHs & LHs, a bear flag is a continuation pattern
+        #this function identifies the trend and tries to find these patters forming
+
+
+# 2. Reversal Chart Patterns
+        #Head and shoulders
+        #Slightly more complicated than the previous patterns,
+        #The Head & Shoulders pattern is characterized by an uptrend; 
+        #where the highest high in the uptrend forms the left shoulder
+        #where the next high, which is a higher high, forms the head
+        #where the next high, which is a lower high, forms the right shoulder
+        #the neckline is formed as a line of the lows between both shoulders and the head
+        #a position should be entered at the break of the neckline
+
+# 3. Double tops/triple top/ bottom 
 
 
 valuesforDF()
