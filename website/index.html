@@ -10,10 +10,9 @@
   <link rel="stylesheet" href="tabStyles.css">
 </head>
 <body style ="background-color:#0c030f">
-
 <div class="jumbotron text-center" style="background-color:#0f0b15">
   <h1 style = "color:white">algorithm's open trades</h1>
-  <a href="https://github.com/tindll/mms"><img style="position: absolute;top: 6%;right: 5%;float: right" src="github.png" alt="back to github" width="80" height="80"></a>
+  <a href="https://github.com/tindll/mms"><img style="position: absolute;top: 7%;right: 5%;float: right" src="github.png" alt="back to github" width="70" height="70"></a>
 </div>
 
 <div class="tab">
@@ -22,21 +21,24 @@
 </div>
 
 <div id="open" class="positionsTab" style="color:white">
-  <h3>Open positions : </h3>
-  <p>Below is a list of all open positions taken by the algorithm.</p>
+
 </div>
 
 <div id="close" class="positionsTab" style="color:white">
-  <h3>Closed positions : </h3>
-  <p>Below is a list of all closed positions that the algorithm has taken recently.</p> 
+
 </div>
 
 <script>
   document.getElementById("defaultOpen").click();
-  
   function openPosition(event, positionType) {
     var i, positionsTab, tablinks;
     positionsTab = document.getElementsByClassName("positionsTab");
+
+    //if(positionType=='open'){
+    //  document.getElementById('footer').innerHTML = "Above is a list of all open positions taken by the algorithm."
+    //} 
+    //else if(positionType =='close'){document.getElementById('footer').innerHTML = "Above is a list of all closed positions that the algorithm has taken recently."
+    //}
     for (i = 0; i < positionsTab.length; i++) {
       positionsTab[i].style.display = "none";
     }
@@ -51,9 +53,8 @@
 
 
 
-
 <footer style ="position: fixed;left: 0;bottom: 0; width: 100%;" class="bg-light text-center text-lg-start">
-<div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+<div class="text-center p-3" id="footer" style="background-color: rgba(0, 0, 0, 0.2);">
 this page is just placeholder for now, everything is subject to change to make it look a lot nicer
 </div>
 </footer>

@@ -1,7 +1,17 @@
+body{
+    background-image: url("background3.png");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+
 .tab {
     overflow: hidden;
     border: 1px solid #0f0b15;
     background-color: #120516;
+    text-align: center;
+    margin:auto;
   }
  
   /* Style the buttons inside the tab */
@@ -33,4 +43,18 @@
     border: 1px solid #ccc;
     border-top: none;
   }
+  .img-loader {
+    position: sticky;
+    left: 50%;
+    max-width: 100%;
+    height: auto;
+}
+.wrapper {
+    position: relative;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+}
+  
   
