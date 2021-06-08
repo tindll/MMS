@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="tabStyles.css">
 </head>
 <body style ="background-color:#0c030f">
 
@@ -15,17 +16,41 @@
   <a href="https://github.com/tindll/mms"><img style="position: absolute;top: 6%;right: 5%;float: right" src="github.png" alt="back to github" width="80" height="80"></a>
 </div>
 
-<div class="container">
-  <div class="row">
-    <div style="color:white" class="col-sm-4">
-      <h3>General info: </h3>
-      <p>this website will be used to show all open positions that the algorithm has taken</p>
-      <p>all positions will be stored in a database, the website will be updated each time a new position is entered</p>
-      <p>it will also show information about the trade, such as entry/exit condition, profit/loss , the chart produced by the python script, time/date...</p>
-    </div>
-
-  </div>
+<div class="tab">
+  <button class="tablinks" onclick="openPosition(event, 'open')" id="defaultOpen" style="color:white">Open positions</button>
+  <button class="tablinks" onclick="openPosition(event, 'close')" style="color:white">Closed positions</button>
 </div>
+
+<div id="open" class="positionsTab" style="color:white">
+  <h3>Open positions : </h3>
+  <p>Below is a list of all open positions taken by the algorithm.</p>
+</div>
+
+<div id="close" class="positionsTab" style="color:white">
+  <h3>Closed positions : </h3>
+  <p>Below is a list of all closed positions that the algorithm has taken recently.</p> 
+</div>
+
+<script>
+  document.getElementById("defaultOpen").click();
+  
+  function openPosition(event, positionType) {
+    var i, positionsTab, tablinks;
+    positionsTab = document.getElementsByClassName("positionsTab");
+    for (i = 0; i < positionsTab.length; i++) {
+      positionsTab[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(positionType).style.display = "block";
+    event.currentTarget.className += " active";
+  }
+  </script>
+
+
+
 
 <footer style ="position: fixed;left: 0;bottom: 0; width: 100%;" class="bg-light text-center text-lg-start">
 <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
