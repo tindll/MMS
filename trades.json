@@ -1,32 +1,28 @@
 {
     "trades": [
-      {
-        "tradeID": 1,
-        "symbol": "BTCUSDT",
-        "positionType": "LONG",
-        "open$": 37858, 
-        "close$": 39000,
-        "leverageX": 5,
-        "Date": "05/31/2021 - 12:00 AM",
-        "tradeReason": [
-          "RSI divergence",
-          "RSI Overbought",
-          "MACD Crossover"
-        ]
-      },
-      {
-        "tradeID": 2,
-        "symbol": "ETHUSDT",
-        "positionType": "SHORT",
-        "open$": 2794, 
-        "close$": 2500,
-        "leverageX": 10,
-        "Date": "06/03/2021 - 9:00 AM",
-        "tradeReason": [
-          "ADX+DMI cross",
-          "BBand>1",
-          "Long/Short ratio ATH"
-        ]
-      }
+        {
+            "tradeID": 1,
+            "symbol": "testing",
+            "positionType": "testing",
+            "open$": "testing",
+            "close$": "testing",
+            "leverageX": "testing",
+            "Date": "testing",
+            "tradeReason": [
+                "testing"
+            ]
+        },
+        {
+            "tradeID": 2,
+            "symbol": "testing",
+            "positionType": "testing",
+            "open$": "testing",
+            "close$": "testing",
+            "leverageX": "testing",
+            "Date": "testing",
+            "tradeReason": [
+                "testing"
+            ]
+        }
     ]
-  }
+}
