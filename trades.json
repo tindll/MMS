@@ -23,6 +23,126 @@
             "tradeReason": [
                 "testing"
             ]
+        },
+        {
+            "tradeID": 3,
+            "symbol": "BTCUSDT",
+            "positionType": "LONG",
+            "open$": 31705.24,
+            "close$": 60000,
+            "leverageX": "10x",
+            "Date": "06/08/2021, 17:00:00",
+            "tradeReason": [
+                "Regular Bullish divergence found"
+            ]
+        },
+        {
+            "tradeID": 4,
+            "symbol": "BTCUSDT",
+            "positionType": "LONG",
+            "open$": 31705.24,
+            "close$": 60000,
+            "leverageX": "10x",
+            "Date": "06/08/2021, 17:00:00",
+            "tradeReason": [
+                "Regular Bullish divergence found"
+            ]
+        },
+        {
+            "tradeID": 5,
+            "symbol": "BTCUSDT",
+            "positionType": "LONG",
+            "open$": 31705.24,
+            "close$": 60000,
+            "leverageX": "10x",
+            "Date": "06/08/2021, 17:00:00",
+            "tradeReason": [
+                "Regular Bullish divergence found"
+            ]
+        },
+        {
+            "tradeID": 6,
+            "symbol": "BTCUSDT",
+            "positionType": "LONG",
+            "open$": 31705.24,
+            "close$": 60000,
+            "leverageX": "10x",
+            "Date": "06/08/2021, 17:00:00",
+            "tradeReason": [
+                "Regular Bullish divergence found"
+            ]
+        },
+        {
+            "tradeID": 7,
+            "symbol": "BTCUSDT",
+            "positionType": "LONG",
+            "open$": 31705.24,
+            "close$": 60000,
+            "leverageX": "10x",
+            "Date": "06/08/2021, 17:00:00",
+            "tradeReason": [
+                "Regular Bullish divergence found"
+            ]
+        },
+        {
+            "tradeID": 8,
+            "symbol": "BTCUSDT",
+            "positionType": "LONG",
+            "open$": 31705.24,
+            "close$": 60000,
+            "leverageX": "10x",
+            "Date": "06/08/2021, 17:00:00",
+            "tradeReason": [
+                "Regular Bullish divergence found"
+            ]
+        },
+        {
+            "tradeID": 9,
+            "symbol": "BTCUSDT",
+            "positionType": "LONG",
+            "open$": 31705.24,
+            "close$": 60000,
+            "leverageX": "10x",
+            "Date": "06/08/2021, 17:00:00",
+            "tradeReason": [
+                "Regular Bullish divergence found"
+            ]
+        },
+        {
+            "tradeID": 10,
+            "symbol": "BTCUSDT",
+            "positionType": "LONG",
+            "open$": 31705.24,
+            "close$": 60000,
+            "leverageX": "10x",
+            "Date": "06/08/2021, 17:00:00",
+            "tradeReason": [
+                "Regular Bullish divergence found"
+            ]
+        },
+        {
+            "tradeID": 11,
+            "symbol": "BTCUSDT",
+            "positionType": "LONG",
+            "open$": 31705.24,
+            "close$": 60000,
+            "leverageX": "10x",
+            "Date": "06/08/2021, 17:00:00",
+            "tradeReason": [
+                "Regular Bullish divergence found"
+            ]
+        },
+        {
+            "tradeID": 12,
+            "symbol": "BTCUSDT",
+            "positionType": "LONG",
+            "open$": 31705.24,
+            "close$": 60000,
+            "leverageX": "10x",
+            "Date": "06/08/2021, 17:00:00",
+            "tradeReason": [
+                "Regular Bullish divergence found"
+            ]
         }
     ]
 }

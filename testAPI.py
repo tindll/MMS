@@ -9,6 +9,12 @@ import json
 from binance.client import Client
 from finta import TA
 from scipy.signal import argrelextrema #for local highs/lows
+from ftplib import FTP #ftp for json file
+
+#connecting to host, to upload JSON files for website
+ftp = FTP('zjamsty.com') 
+ftp.login(user=os.environ.get('FTP_USER'), passwd=os.environ.get('FTP_PW'))
+ftp.cwd("/zjamsty.com")
 
 #checking that we have 3 arguments (the validity of the arguments is tested later)
 if(len(sys.argv)!=4):
@@ -231,7 +237,8 @@ def find_divergences(df):
                             priceDifference = local_low_list[index][0]-local_low_list[index2][0]
                             RSIDifference = local_low_list[index2][1] - local_low_list[index][1] 
                             if(df.index[-5]<local_low.index[index2]): #if divergence is recent
-                                updateJSON_newtrade(symbol,"LONG",local_low_list[index2][0],60000,'10x',local_low.index[index2],'Regular Bullish divergence found')
+                                date = local_low.index[index2].strftime("%m/%d/%Y, %H:%M:%S")
+                                updateJSON_newtrade(symbol,"LONG",local_low_list[index2][0],60000,'10x',date,'Regular Bullish divergence found')
                             #print("recent regular bullish divergence found")
                             #print("regular bullish divergence found @low n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
                             #print(local_low_list[index]," -> ",local_low_list[index2])
@@ -348,9 +355,6 @@ def find_divergences(df):
 # 3. Double tops/triple top/ bottom 
 
 
-valuesforDF()
-
-
 def updateJSON_newtrade(symbol,positionType,openPrice,close,leverage,Date,tradeReason):
     with open('trades.json','r+') as tradesJSON:
         data = json.load(tradesJSON)
@@ -369,8 +373,15 @@ def updateJSON_newtrade(symbol,positionType,openPrice,close,leverage,Date,tradeR
         data['trades'].append(newTRADE)
         tradesJSON.seek(0)
         json.dump(data, tradesJSON, indent = 4)
+        tradesJSON.close()
+        #print(ftp.getwelcome())
+        #ftp.retrlines('LIST')  
 
-updateJSON_newtrade('testing','testing','testing','testing','testing','testing','testing')
+valuesforDF()
+ftp.storbinary('STOR trades.json',open('trades.json','rb'))
 
 print("")
+print("Opened positions will be displayed here ->  http://www.zjamsty.com/")
+print("(it might take a moment)")
 print("run time: ",datetime.datetime.now() - begin_time) #execution time
+ftp.quit()
