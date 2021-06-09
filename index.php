@@ -17,29 +17,7 @@
   <a href="https://github.com/tindll/mms"><img style="position: absolute;top: 7%;right: 5%;float: right" src="github.png" alt="back to github" width="70" height="70"></a>
 </div>
 
-<script>
-  $(document).ready( function () {
-    $('#table_id').DataTable();
-    $('#table_id2').DataTable();
-  } );
-  document.getElementById("defaultOpen").click();
-  function openPosition(event, positionType) {
-    var i, positionsTab, tablinks;
-    positionsTab = document.getElementsByClassName("positionsTab");
-
-    for (i = 0; i < positionsTab.length; i++) {
-      positionsTab[i].style.display = "none";
-    }
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-      tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-    document.getElementById(positionType).style.display = "block";
-    event.currentTarget.className += " active";
-  }
-  </script>
-
-<div class="tab" style= "margin-bottom: 3%;">
+<div class="tab" style= "margin-bottom: 1%;">
   <button class="tablinks" onclick="openPosition(event, 'open')" id="defaultOpen" style="color:white">Open positions</button>
   <button class="tablinks" onclick="openPosition(event, 'close')" style="color:white">Closed positions</button>
 </div>
@@ -59,26 +37,19 @@
         </tr>
     </thead>
     <tbody style="color:black">
-        <tr>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-        </tr>
-        <tr>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-        </tr>
+      <?php
+        $json = file_get_contents('trades.json');
+        $tradesList = json_decode($json, true);
+        foreach($tradesList as $key => $arrays){
+            foreach($arrays as $array){
+                echo "<tr>";
+                foreach($array as $key => $value){
+                  echo "<td>". $value . "</td>";
+                }
+                echo "</tr>";
+            }
+        }
+      ?>
     </tbody>
   </table>
 </div>
@@ -122,22 +93,28 @@
   </table>
 </div>
 
+<script>
+  $(document).ready( function () {
+    $('#table_id').DataTable();
+    $('#table_id2').DataTable();
+  } );
+  function openPosition(event, positionType) {
+    var i, positionsTab, tablinks;
+    positionsTab = document.getElementsByClassName("positionsTab");
 
-<?php
-        $json = file_get_contents('trades.json');
-        $tradesList = json_decode($json, true);
-        foreach($tradesList as $key => $arrays){
-            echo $key . "<br />";
-            foreach($arrays as $array){
-                //echo "<div>";
-                foreach($array as $key => $value){
-                    echo $key . " => " . $value . "<br />";
-                }
-                //echo "</div>";
-            }
-            echo "<br />";
-        }
-?>
+    for (i = 0; i < positionsTab.length; i++) {
+      positionsTab[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(positionType).style.display = "block";
+    event.currentTarget.className += " active";
+  }
+  document.getElementById("defaultOpen").click();
+  </script>
+
 
 
 
