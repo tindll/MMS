@@ -366,9 +366,7 @@ def updateJSON_newtrade(symbol,positionType,openPrice,close,leverage,Date,tradeR
             "close$": close,
             "leverageX": leverage,
             "Date": Date,
-            "tradeReason": [
-                tradeReason
-            ]
+            "tradeReason": tradeReason
             }
         data['trades'].append(newTRADE)
         tradesJSON.seek(0)

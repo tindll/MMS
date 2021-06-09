@@ -1,35 +1,11 @@
 {
     "trades": [
         {
-            "tradeID": 1,
-            "symbol": "testing",
-            "positionType": "testing",
-            "open$": "testing",
-            "close$": "testing",
-            "leverageX": "testing",
-            "Date": "testing",
-            "tradeReason": [
-                "testing"
-            ]
-        },
-        {
-            "tradeID": 2,
-            "symbol": "testing",
-            "positionType": "testing",
-            "open$": "testing",
-            "close$": "testing",
-            "leverageX": "testing",
-            "Date": "testing",
-            "tradeReason": [
-                "testing"
-            ]
-        },
-        {
             "tradeID": 3,
             "symbol": "BTCUSDT",
             "positionType": "LONG",
             "open$": 31705.24,
-            "close$": 60000,
+            "close$": "test",
             "leverageX": "10x",
             "Date": "06/08/2021, 17:00:00",
             "tradeReason": [
@@ -41,7 +17,7 @@
             "symbol": "BTCUSDT",
             "positionType": "LONG",
             "open$": 31705.24,
-            "close$": 60000,
+            "close$": "test",
             "leverageX": "10x",
             "Date": "06/08/2021, 17:00:00",
             "tradeReason": [
@@ -53,7 +29,7 @@
             "symbol": "BTCUSDT",
             "positionType": "LONG",
             "open$": 31705.24,
-            "close$": 60000,
+            "close$": "test",
             "leverageX": "10x",
             "Date": "06/08/2021, 17:00:00",
             "tradeReason": [
@@ -65,7 +41,7 @@
             "symbol": "BTCUSDT",
             "positionType": "LONG",
             "open$": 31705.24,
-            "close$": 60000,
+            "close$": "test",
             "leverageX": "10x",
             "Date": "06/08/2021, 17:00:00",
             "tradeReason": [
@@ -77,7 +53,7 @@
             "symbol": "BTCUSDT",
             "positionType": "LONG",
             "open$": 31705.24,
-            "close$": 60000,
+            "close$": "test",
             "leverageX": "10x",
             "Date": "06/08/2021, 17:00:00",
             "tradeReason": [
@@ -89,7 +65,7 @@
             "symbol": "BTCUSDT",
             "positionType": "LONG",
             "open$": 31705.24,
-            "close$": 60000,
+            "close$": "test",
             "leverageX": "10x",
             "Date": "06/08/2021, 17:00:00",
             "tradeReason": [
@@ -101,7 +77,7 @@
             "symbol": "BTCUSDT",
             "positionType": "LONG",
             "open$": 31705.24,
-            "close$": 60000,
+            "close$": "test",
             "leverageX": "10x",
             "Date": "06/08/2021, 17:00:00",
             "tradeReason": [
@@ -113,7 +89,7 @@
             "symbol": "BTCUSDT",
             "positionType": "LONG",
             "open$": 31705.24,
-            "close$": 60000,
+            "close$": "test",
             "leverageX": "10x",
             "Date": "06/08/2021, 17:00:00",
             "tradeReason": [
@@ -125,7 +101,7 @@
             "symbol": "BTCUSDT",
             "positionType": "LONG",
             "open$": 31705.24,
-            "close$": 60000,
+            "close$": "test",
             "leverageX": "10x",
             "Date": "06/08/2021, 17:00:00",
             "tradeReason": [
@@ -137,7 +113,7 @@
             "symbol": "BTCUSDT",
             "positionType": "LONG",
             "open$": 31705.24,
-            "close$": 60000,
+            "close$": "TBD",
             "leverageX": "10x",
             "Date": "06/08/2021, 17:00:00",
             "tradeReason": [
