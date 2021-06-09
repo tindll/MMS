@@ -8,6 +8,8 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="tabStyles.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
 </head>
 <body style ="background-color:#0c030f">
 <div class="jumbotron text-center" style="background-color:#0f0b15">
@@ -29,16 +31,14 @@
 </div>
 
 <script>
+  $(document).ready( function () {
+    $('#table_id').DataTable();
+  } );
   document.getElementById("defaultOpen").click();
   function openPosition(event, positionType) {
     var i, positionsTab, tablinks;
     positionsTab = document.getElementsByClassName("positionsTab");
 
-    //if(positionType=='open'){
-    //  document.getElementById('footer').innerHTML = "Above is a list of all open positions taken by the algorithm."
-    //} 
-    //else if(positionType =='close'){document.getElementById('footer').innerHTML = "Above is a list of all closed positions that the algorithm has taken recently."
-    //}
     for (i = 0; i < positionsTab.length; i++) {
       positionsTab[i].style.display = "none";
     }
@@ -50,6 +50,24 @@
     event.currentTarget.className += " active";
   }
   </script>
+<table id="table_id" class="display">
+    <thead>
+        <tr>
+            <th>Column 1</th>
+            <th>Column 2</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+        </tr>
+        <tr>
+            <td>Row 2 Data 1</td>
+            <td>Row 2 Data 2</td>
+        </tr>
+    </tbody>
+</table>
 
 <?php
         $json = file_get_contents('trades.json');
@@ -57,10 +75,11 @@
         foreach($tradesList as $key => $arrays){
             echo $key . "<br />";
             foreach($arrays as $array){
+                //echo "<div>";
                 foreach($array as $key => $value){
                     echo $key . " => " . $value . "<br />";
                 }
-                echo "<br />";
+                //echo "</div>";
             }
             echo "<br />";
         }
