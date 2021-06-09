@@ -42,7 +42,7 @@
         $tradesList = json_decode($json, true);
         foreach($tradesList as $key => $arrays){
             foreach($arrays as $array){
-              if(in_array("testing",$array)==FALSE){
+              if(in_array("TBD",$array)){
                 echo "<tr>";
                 foreach($array as $key => $value){
                     echo "<td>". $value . "</td>";
@@ -71,26 +71,21 @@
         </tr>
     </thead>
     <tbody style="color:black">
-        <tr>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-        </tr>
-        <tr>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-        </tr>
+    <?php
+        $json = file_get_contents('trades.json');
+        $tradesList = json_decode($json, true);
+        foreach($tradesList as $key => $arrays){
+            foreach($arrays as $array){
+              if(in_array("TBD",$array)==FALSE){
+                echo "<tr>";
+                foreach($array as $key => $value){
+                    echo "<td>". $value . "</td>";
+                }
+                echo "</tr>";
+              }
+            }
+        }
+      ?>
     </tbody>
   </table>
 </div>

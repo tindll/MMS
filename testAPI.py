@@ -238,7 +238,7 @@ def find_divergences(df):
                             RSIDifference = local_low_list[index2][1] - local_low_list[index][1] 
                             if(df.index[-5]<local_low.index[index2]): #if divergence is recent
                                 date = local_low.index[index2].strftime("%m/%d/%Y, %H:%M:%S")
-                                updateJSON_newtrade(symbol,"LONG",local_low_list[index2][0],60000,'10x',date,'Regular Bullish divergence found')
+                                updateJSON_newtrade(symbol,"LONG",local_low_list[index2][0],"TBD",'10x',date,'Regular Bullish divergence found')
                             #print("recent regular bullish divergence found")
                             #print("regular bullish divergence found @low n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
                             #print(local_low_list[index]," -> ",local_low_list[index2])
@@ -256,7 +256,7 @@ def find_divergences(df):
                         priceDifference = local_low_list[index2][0]-local_low_list[index][0]
                         RSIDifference = local_low_list[index][1] - local_low_list[index2][1]
                         if(df.index[-5]<local_low.index[index2]): #if divergence is recent
-                            updateJSON_newtrade(symbol,"LONG",local_low_list[index2][0],60000,'10x',local_low.index[index2],'Hidden Bullish divergence found')
+                            updateJSON_newtrade(symbol,"LONG",local_low_list[index2][0],"TBD",'10x',local_low.index[index2],'Hidden Bullish divergence found')
                         #print("recent hidden bullish divergence found")
                         #print("hidden bullish divergence found @low n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
                         #print(local_low_list[index]," -> ",local_low_list[index2])
@@ -292,7 +292,7 @@ def find_divergences(df):
                             priceDifference = local_high_list[index2][0]-local_high_list[index][0]
                             RSIDifference = local_high_list[index][1] - local_high_list[index2][1]
                             if(df.index[-5]<local_high.index[index2]): #if divergence is recent
-                                updateJSON_newtrade(symbol,"SHORT",local_low_list[index2][0],20000,'10x',local_low.index[index2],'Regular Bearish divergence found')
+                                updateJSON_newtrade(symbol,"SHORT",local_low_list[index2][0],"TBD",'10x',local_low.index[index2],'Regular Bearish divergence found')
                             #print("recent regular bearish divergence found")
                             #print("regular bearish divergence found @high n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
                             #print(local_high_list[index]," -> ",local_high_list[index2])
@@ -309,7 +309,7 @@ def find_divergences(df):
                         priceDifference = local_high_list[index][0]-local_high_list[index2][0]
                         RSIDifference = local_high_list[index2][1] - local_high_list[index][1]
                         if(df.index[-5]<local_high.index[index2]): #if divergence is recent
-                            updateJSON_newtrade(symbol,"SHORT",local_low_list[index2][0],20000,'10x',local_low.index[index2],'Hidden Bearish divergence found')
+                            updateJSON_newtrade(symbol,"SHORT",local_low_list[index2][0],"TBD",'10x',local_low.index[index2],'Hidden Bearish divergence found')
                         #print("recent hidden bearish divergence found")
                         #print("hidden bearish divergence found @high n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
                         #print(local_high_list[index]," -> ",local_high_list[index2])
