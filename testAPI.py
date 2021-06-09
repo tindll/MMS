@@ -382,6 +382,6 @@ ftp.storbinary('STOR trades.json',open('trades.json','rb'))
 
 print("")
 print("Opened positions will be displayed here ->  http://www.zjamsty.com/")
-print("(it might take a moment)")
+print("(you will need to refresh to show recent positions)")
 print("run time: ",datetime.datetime.now() - begin_time) #execution time
 ftp.quit()

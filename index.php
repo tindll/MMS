@@ -42,11 +42,13 @@
         $tradesList = json_decode($json, true);
         foreach($tradesList as $key => $arrays){
             foreach($arrays as $array){
+              if(in_array("testing",$array)==FALSE){
                 echo "<tr>";
                 foreach($array as $key => $value){
-                  echo "<td>". $value . "</td>";
+                    echo "<td>". $value . "</td>";
                 }
                 echo "</tr>";
+              }
             }
         }
       ?>
@@ -55,7 +57,7 @@
 </div>
 
 <div id="close" class="positionsTab" style ="margin-left: 2%;margin-right: 2%;" >
-  <table id="table_id2" class="display" style="color:white">
+  <table id="table_id1" class="display" style="color:white">
     <thead style="color:white">
         <tr>
             <th>Trade ID</th>
@@ -96,7 +98,7 @@
 <script>
   $(document).ready( function () {
     $('#table_id').DataTable();
-    $('#table_id2').DataTable();
+    $('#table_id1').DataTable();
   } );
   function openPosition(event, positionType) {
     var i, positionsTab, tablinks;
