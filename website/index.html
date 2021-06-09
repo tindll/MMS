@@ -51,6 +51,18 @@
   }
   </script>
 
+<?php
+        $json = file_get_contents('trades.json');
+        $tradesList = json_decode($json, true);
+        for($i=0; $i< count($tradesList); $i++)
+        {  
+            echo $tradesList[$i];
+        }
+?>
+
+
+
+
 
 
 <footer style ="position: fixed;left: 0;bottom: 0; width: 100%;" class="bg-light text-center text-lg-start">

@@ -17,22 +17,10 @@
   <a href="https://github.com/tindll/mms"><img style="position: absolute;top: 7%;right: 5%;float: right" src="github.png" alt="back to github" width="70" height="70"></a>
 </div>
 
-<div class="tab">
-  <button class="tablinks" onclick="openPosition(event, 'open')" id="defaultOpen" style="color:white">Open positions</button>
-  <button class="tablinks" onclick="openPosition(event, 'close')" style="color:white">Closed positions</button>
-</div>
-
-<div id="open" class="positionsTab" style="color:white">
-
-</div>
-
-<div id="close" class="positionsTab" style="color:white">
-
-</div>
-
 <script>
   $(document).ready( function () {
     $('#table_id').DataTable();
+    $('#table_id2').DataTable();
   } );
   document.getElementById("defaultOpen").click();
   function openPosition(event, positionType) {
@@ -50,24 +38,90 @@
     event.currentTarget.className += " active";
   }
   </script>
-<table id="table_id" class="display">
-    <thead>
+
+<div class="tab" style= "margin-bottom: 3%;">
+  <button class="tablinks" onclick="openPosition(event, 'open')" id="defaultOpen" style="color:white">Open positions</button>
+  <button class="tablinks" onclick="openPosition(event, 'close')" style="color:white">Closed positions</button>
+</div>
+
+<div id="open" class="positionsTab" style ="margin-left: 2%;margin-right: 2%;"  >
+  <table id="table_id" class="display" style="color:white">
+    <thead style="color:white">
         <tr>
-            <th>Column 1</th>
-            <th>Column 2</th>
+            <th>Trade ID</th>
+            <th>Symbol</th>
+            <th>Long/Short</th>
+            <th>Open price</th>
+            <th>Close price</th>
+            <th>Leverage</th>
+            <th>Date</th>
+            <th>Trade reason</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody style="color:black">
         <tr>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
             <td>Row 1 Data 1</td>
             <td>Row 1 Data 2</td>
         </tr>
         <tr>
-            <td>Row 2 Data 1</td>
-            <td>Row 2 Data 2</td>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
         </tr>
     </tbody>
-</table>
+  </table>
+</div>
+
+<div id="close" class="positionsTab" style ="margin-left: 2%;margin-right: 2%;" >
+  <table id="table_id2" class="display" style="color:white">
+    <thead style="color:white">
+        <tr>
+            <th>Trade ID</th>
+            <th>Symbol</th>
+            <th>Long/Short</th>
+            <th>Open price</th>
+            <th>Close price</th>
+            <th>Leverage</th>
+            <th>Date</th>
+            <th>Trade reason</th>
+        </tr>
+    </thead>
+    <tbody style="color:black">
+        <tr>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+        </tr>
+        <tr>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+
 
 <?php
         $json = file_get_contents('trades.json');

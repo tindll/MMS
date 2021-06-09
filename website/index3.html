@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+    <style>
+      #myContainer {
+        width: 100%;
+        height: 100%;
+        background-color: white;
+      }
+      #myAnimation {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        color: white;
+      }
+      #cords{
+        color:white;
+      }
+      #cc{
+        color:red;
+      }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <p id="cords"></p>
+    <p id="cc"> </p>
+
+
+
+
+  <head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon"/>
+    <title>zjmst</title>
+  </head>
+
+  <body  onload="myMove()" style="background: #383838;">
+
+    <style>
+    #myContainer {
+      width: 100%;
+      height: 100%;
+      background-color: white;
+      }
+    #myAnimation {
+      width: 50px;
+      height: 50px;
+      position: absolute;
+      color: white;
+    }
+    </style>
+  <body>
+      <div id ="myContainer">
+        <div id ="myAnimation">
+          <img id="movethis" src="test4.png">
+        </div>
+    </div>
+
+    <script>
+    function myMove() {
+      var height = $(document).height();
+      var width = $(document).width();
+      var elem = document.getElementById("myAnimation");
+      document.getElementById("cords").innerHTML ='Y:'+ height;
+      document.getElementById("cords").innerHTML += ' X:' + width;
+
+      window.onresize = function(event) {
+        height = $(document).height();
+        width = $(document).width();
+        document.getElementById("cords").innerHTML ='Y:'+ height;
+        document.getElementById("cords").innerHTML += ' X:' + width;
+      };
+
+      var posX = 0;
+      var posY = 0;
+
+
+
+      var id = setInterval(frame, 10);
+      function frame() {
+        if (posY <= height-100 && posX<=830) {
+          document.getElementById("cc").innerHTML ='posY:'+ posY;
+          document.getElementById("cc").innerHTML += ' posX:' + posX;
+          posY+=2;
+          posX+=2;
+          elem.style.top = posY + 'px';
+          elem.style.left = posX + 'px';
+        }
+        else if (posX<=width-245) {
+          document.getElementById("cc").innerHTML ='posY:'+ posY;
+          document.getElementById("cc").innerHTML += ' posX:' + posX;
+          posY-=2;
+          posX+=2;
+          elem.style.top = posY + 'px';
+          elem.style.left = posX + 'px';
+
+        }
+        else {
+          clearInterval(id);
+        }
+  }
+}
+    </script>
+
+
+
+
+
+  </body>
+</html>
