@@ -25,100 +25,54 @@
             ]
         },
         {
-            "tradeID": 5,
-            "symbol": "BTCUSDT",
-            "positionType": "LONG",
-            "open$": 31705.24,
-            "close$": "test",
-            "leverageX": "10x",
-            "Date": "06/08/2021, 17:00:00",
-            "tradeReason": [
-                "Regular Bullish divergence found"
-            ]
-        },
-        {
-            "tradeID": 6,
-            "symbol": "BTCUSDT",
-            "positionType": "LONG",
-            "open$": 31705.24,
-            "close$": "test",
-            "leverageX": "10x",
-            "Date": "06/08/2021, 17:00:00",
-            "tradeReason": [
-                "Regular Bullish divergence found"
-            ]
-        },
-        {
-            "tradeID": 7,
-            "symbol": "BTCUSDT",
-            "positionType": "LONG",
-            "open$": 31705.24,
-            "close$": "test",
-            "leverageX": "10x",
-            "Date": "06/08/2021, 17:00:00",
-            "tradeReason": [
-                "Regular Bullish divergence found"
-            ]
-        },
-        {
-            "tradeID": 8,
-            "symbol": "BTCUSDT",
-            "positionType": "LONG",
-            "open$": 31705.24,
-            "close$": "test",
-            "leverageX": "10x",
-            "Date": "06/08/2021, 17:00:00",
-            "tradeReason": [
-                "Regular Bullish divergence found"
-            ]
-        },
-        {
-            "tradeID": 9,
-            "symbol": "BTCUSDT",
-            "positionType": "LONG",
-            "open$": 31705.24,
-            "close$": "test",
-            "leverageX": "10x",
-            "Date": "06/08/2021, 17:00:00",
-            "tradeReason": [
-                "Regular Bullish divergence found"
-            ]
-        },
-        {
-            "tradeID": 10,
-            "symbol": "BTCUSDT",
-            "positionType": "LONG",
-            "open$": 31705.24,
-            "close$": "test",
-            "leverageX": "10x",
-            "Date": "06/08/2021, 17:00:00",
-            "tradeReason": [
-                "Regular Bullish divergence found"
-            ]
-        },
-        {
-            "tradeID": 11,
-            "symbol": "BTCUSDT",
-            "positionType": "LONG",
-            "open$": 31705.24,
-            "close$": "test",
-            "leverageX": "10x",
-            "Date": "06/08/2021, 17:00:00",
-            "tradeReason": [
-                "Regular Bullish divergence found"
-            ]
-        },
-        {
-            "tradeID": 12,
+            "tradeID": 1,
             "symbol": "BTCUSDT",
             "positionType": "LONG",
             "open$": 31705.24,
             "close$": "TBD",
             "leverageX": "10x",
             "Date": "06/08/2021, 17:00:00",
-            "tradeReason": [
-                "Regular Bullish divergence found"
-            ]
+            "tradeReason": "Regular Bullish divergence found"
+        },
+        {
+            "tradeID": 2,
+            "symbol": "BTCUSDT",
+            "positionType": "SHORT",
+            "open$": 37460.88,
+            "close$": "TBD",
+            "leverageX": "10x",
+            "Date": "06/10/2021, 01:00:00",
+            "tradeReason": "Hidden Bearish divergence found"
+        },
+        {
+            "tradeID": 3,
+            "symbol": "ETHUSDT",
+            "positionType": "SHORT",
+            "open$": 2601.15,
+            "close$": "TBD",
+            "leverageX": "10x",
+            "Date": "06/10/2021, 01:00:00",
+            "tradeReason": "Regular Bearish divergence found"
+        },
+        {
+            "tradeID": 6,
+            "symbol": "BTCUSDT",
+            "positionType": "SHORT",
+            "open$": 37397.92,
+            "close$": "TBD",
+            "leverageX": "10x",
+            "Date": "06/10/2021, 01:00:00",
+            "tradeReason": "Hidden Bearish divergence found"
+        },
+        {
+            "tradeID": 7,
+            "symbol": "BTCUSDT",
+            "positionType": "SHORT",
+            "open$": 37397.92,
+            "close$": "TBD",
+            "leverageX": "10x",
+            "Date": "06/10/2021, 01:00:00",
+            "tradeReason": "Hidden Bearish divergence found"
         }
     ]
 }
