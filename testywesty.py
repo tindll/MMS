@@ -2,7 +2,7 @@ import subprocess
 import time
 
 symbols = ["BTCUSDT", "ETHUSDT", "BCHUSDT", "XRPUSDT", "EOSUSDT", "LTCUSDT", "TRXUSDT", "ETCUSDT", "XLMUSDT","LINKUSDT"]
-timeframes = ["15m", "1h", "24h"]
+timeframes = ["15m", "1h", "1d"]
 
 for symbol in symbols:
     for times in timeframes:
