@@ -92,8 +92,8 @@
 
 <script>
   $(document).ready( function () {
-    $('#table_id').DataTable();
-    $('#table_id1').DataTable();
+    $('#table_id').DataTable({"order": [[ 0, "desc" ]]});
+    $('#table_id1').DataTable({"order": [[ 0, "desc" ]]});
   } );
   function openPosition(event, positionType) {
     var i, positionsTab, tablinks;

@@ -154,7 +154,7 @@ def valuesforDF():
 
     #calling to indicator functions
     find_divergences(df)
-    #find_macd_signalCrossovers(df)
+    find_macd_signalCrossovers(df)
     #dmi_crossover(df)
     
     #call to the function that creates the graph
@@ -193,11 +193,13 @@ def find_macd_signalCrossovers(df):
     for row in df_crossovers.itertuples(): #ugly code, need to find a better way to do this
         if(row.MACD>row.MACD_signal):
             if(crossover=='DOWN'): #filtering signals with %BB
-                print("bullish crossover @ ",row.Index,'@', row.close)
+                date = (row.Index).strftime("%m/%d/%Y, %H:%M:%S")
+                updateJSON_newtrade(symbol,"LONG",row.close,"TBD",'10x',date,'Bullish MACD crossover')
             crossover = 'UP'
         else : 
             if(crossover=='UP'): #filtering signals with %BB
-                print("bearish crossover @ ",row.Index,'@', row.close)
+                date = (row.Index).strftime("%m/%d/%Y, %H:%M:%S")
+                updateJSON_newtrade(symbol,"SHORT",row.close,"TBD",'10x',date,'Bearish MACD crossover')
             crossover = 'DOWN'
 
 
