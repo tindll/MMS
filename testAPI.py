@@ -193,13 +193,15 @@ def find_macd_signalCrossovers(df):
     for row in df_crossovers.itertuples(): #ugly code, need to find a better way to do this
         if(row.MACD>row.MACD_signal):
             if(crossover=='DOWN'): #filtering signals with %BB
-                date = (row.Index).strftime("%m/%d/%Y, %H:%M:%S")
-                updateJSON_newtrade(symbol,"LONG",row.close,"TBD",'10x',date,'Bullish MACD crossover')
+                if(df.index[-5]<row.Index):
+                    date = (row.Index).strftime("%m/%d/%Y, %H:%M:%S")
+                    updateJSON_newtrade(symbol,"LONG",row.close,"TBD",'10x',date,'Bullish MACD crossover')
             crossover = 'UP'
         else : 
             if(crossover=='UP'): #filtering signals with %BB
-                date = (row.Index).strftime("%m/%d/%Y, %H:%M:%S")
-                updateJSON_newtrade(symbol,"SHORT",row.close,"TBD",'10x',date,'Bearish MACD crossover')
+                if(df.index[-5]<row.Index):
+                    date = (row.Index).strftime("%m/%d/%Y, %H:%M:%S")
+                    updateJSON_newtrade(symbol,"SHORT",row.close,"TBD",'10x',date,'Bearish MACD crossover')
             crossover = 'DOWN'
 
 
