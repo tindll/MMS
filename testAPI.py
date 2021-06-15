@@ -160,7 +160,7 @@ def valuesforDF():
     find_macd_signalCrossovers(df)
     #dmi_crossover(df)
     #find_Flags(df)
-
+    check_BBsqueeze(df)
     #call to the function that creates the graph
     create_plot(df)
 
@@ -341,18 +341,25 @@ def find_divergences(df):
         #!!check volume to make sure!!
     
 
+def check_BBsqueeze(df):
+    bbwidth = df[df['BBWIDTH'].notna()]
+    width_avg = bbwidth["BBWIDTH"].mean()
+    std = bbwidth['BBWIDTH'].std()
+    print(width_avg,std)
 
-def find_Flags(df):
+#def find_Flags(df):
     #Bull flags
     #comprised of LHs & LLs, a bull flag is a continuation pattern
     #this function identifies the trend and tries to find these patterns forming
-
     #check impusle move up, if EMA
 
-        #Bear flags
-        #comprised of HHs & LHs, a bear flag is a continuation pattern
-        #this function identifies the trend and tries to find these patters forming
-
+        
+        
+        
+    #Bear flags
+    #comprised of HHs & LHs, a bear flag is a continuation pattern
+    #this function identifies the trend and tries to find these patters forming
+    #check impusle move down, if EMA
 
 # 2. Reversal Chart Patterns
         #Head and shoulders
