@@ -76,6 +76,9 @@ symbol_price = client.get_symbol_ticker(symbol=symbol)
 
 begin_time = datetime.datetime.now() #for execution time
 
+#get idea of potential support/resistance on binance
+#def getOrderBookinfo():
+
 def create_plot(df):
     mc = mpf.make_marketcolors(up='w',down='b')
     s  = mpf.make_mpf_style(marketcolors=mc)
@@ -156,7 +159,8 @@ def valuesforDF():
     find_divergences(df)
     find_macd_signalCrossovers(df)
     #dmi_crossover(df)
-    
+    #find_Flags(df)
+
     #call to the function that creates the graph
     create_plot(df)
 
@@ -338,11 +342,12 @@ def find_divergences(df):
     
 
 
+def find_Flags(df):
+    #Bull flags
+    #comprised of LHs & LLs, a bull flag is a continuation pattern
+    #this function identifies the trend and tries to find these patterns forming
 
-        #Bull flags
-        #comprised of LHs & LLs, a bull flag is a continuation pattern
-        #this function identifies the trend and tries to find these patterns forming
-    
+    #check impusle move up, if EMA
 
         #Bear flags
         #comprised of HHs & LHs, a bear flag is a continuation pattern
