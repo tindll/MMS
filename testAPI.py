@@ -342,10 +342,15 @@ def find_divergences(df):
     
 
 def check_BBsqueeze(df):
-    bbwidth = df[df['BBWIDTH'].notna()]
+    bbwidth = df[df['BBWIDTH'].notna()& df['ADX'].notna()]
     width_avg = bbwidth["BBWIDTH"].mean()
     std = bbwidth['BBWIDTH'].std()
-    print(width_avg,std)
+    bbwidth = bbwidth[bbwidth.BBWIDTH < width_avg-1.25*std] 
+    bbwidth = bbwidth[bbwidth.ADX < 30]
+    print(bbwidth.BBWIDTH, bbwidth.ADX)
+    
+    minV = bbwidth['BBWIDTH'].min()
+    #print(width_avg,std,minV)
 
 #def find_Flags(df):
     #Bull flags
