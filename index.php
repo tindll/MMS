@@ -112,7 +112,7 @@
         var data = table.row( this ).data();
         modal.style.display = "block";
         modalImg.src = '/charts/chart'+data[0]+'.png';
-        captionText.innerHTML = "chart - "+data[0]+' <br> (click anywhere to get rid of this chart)';    
+        captionText.innerHTML = "chart - id:"+data[0]+' <br> (click anywhere to get rid of this chart)';    
         //alert( 'You clicked on '+data[0]+'\'s row' );
     } );
   } );
@@ -130,9 +130,15 @@
     document.getElementById(positionType).style.display = "block";
     event.currentTarget.className += " active";
   }
-  //span.onclick = function() { 
-  //  modal.style.display = "none";
-  //}
+  var span = document.getElementsByClassName("close")[0];
+  span.onclick = function() { 
+    modal.style.display = "none";
+  }
+  var modal = document.getElementById('myModal');
+  modal.addEventListener('click',function(){
+  this.style.display="none";
+  })
+  
   document.getElementById("defaultOpen").click();
   </script>
 
