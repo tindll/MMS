@@ -16,6 +16,13 @@ ftp = FTP('zjamsty.com')
 ftp.login(user=os.environ.get('FTP_USER'), passwd=os.environ.get('FTP_PW'))
 ftp.cwd("/zjamsty.com")
 
+#getting tradeID for uploading charts and whatnot
+with open('trades.json','r+') as tradesJSON1:
+    data = json.load(tradesJSON1)
+    tradeID = len(data['trades'])+1
+    tradeID = str(tradeID)
+
+
 #checking that we have 3 arguments (the validity of the arguments is tested later)
 if(len(sys.argv)!=4):
     print("testAPI.py was called with the wrong amount of arguments")
@@ -47,7 +54,6 @@ for key in SHORT_LONGjson:
     averageRatio+=float(key['longShortRatio']) 
     ratio_list.append(float(key['longShortRatio']))
 stDev=(np.std(ratio_list, dtype=np.float64))
-confidence_degree = 0.0
 averageRatio/=30
 
 if((argrelextrema(np.array(ratio_list), np.greater_equal,order=3)[-1][-1])==29):
@@ -91,7 +97,7 @@ def create_plot(df):
             mpf.make_addplot(df["min"],type='scatter',markersize=25,color='red',marker='^'),
             mpf.make_addplot(df["max"],type='scatter',markersize=25,color='green',marker='v'),
           ]
-    mpf.plot(df, type='candle', axtitle = symbol+" "+timeframe +" ("+amountDays+"D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chart.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
+    mpf.plot(df, type='candle', axtitle = symbol+" "+timeframe +" ("+amountDays+"D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='charts/chart'+tradeID+'.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
 
 def valuesforDF():
     #fills dataframe with information : open, close, etc... & rsi, macd, bbands
@@ -401,6 +407,17 @@ def updateJSON_newtrade(symbol,positionType,openPrice,close,leverage,Date,tradeR
 
 valuesforDF()
 ftp.storbinary('STOR trades.json',open('trades.json','rb'))
+
+ftp.cwd("/zjamsty.com/charts")
+dirList = ftp.nlst()
+#ACTIVATE POPULATION CONTROL // i'm getting bored i think
+#for swaggedOutPictureOfChart in dirList:
+#    trdIDdir = int(swaggedOutPictureOfChart[5:-4])
+#    if (trdIDdir<int(tradeID)-10): #keep only the 10 most recent charts
+#        ftp.delete(swaggedOutPictureOfChart)
+
+ftp.storbinary('STOR chart'+tradeID+'.png',open('charts/chart'+tradeID+'.png','rb'))
+
 
 print("")
 print("Opened positions will be displayed here ->  http://www.zjamsty.com/")
