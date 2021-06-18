@@ -112,7 +112,15 @@
         var data = table.row( this ).data();
         modal.style.display = "block";
         modalImg.src = '/charts/chart'+data[0]+'.png';
-        captionText.innerHTML = "chart - id:"+data[0]+' <br> (click anywhere to get rid of this chart)';    
+        captionText.innerHTML = "chart - id:"+data[0]+"<br> (click anywhere to get rid of this chart)"
+        let dataID = parseInt(data[0]);
+        let tmp  = parseInt(dataID);
+        let count = 0;
+        modalImg.onerror = function(){
+          captionText.innerHTML = "chart - id:"+data[0]+" is unavailable <br> (only 15 most recent charts are stored on the database)<br> (click anywhere to get rid of this message)"
+          modalImg.src = '';
+        };
+        //image.src = 'non-existing.jpg';
         //alert( 'You clicked on '+data[0]+'\'s row' );
     } );
   } );
@@ -150,7 +158,6 @@
 <div class="text-center p-3" id="footer" style="background-color: rgba(0, 0, 0, 0.2);">
 some trades may seem conflicting, but it's most likely because they're on different time frames <br>
 click on a position to see the chart, charts are only available on more recent trades because hosting is expensive (in terms of disk space) <br>
-some recent trades might not have charts as the positions were found on a chart that already exists
 </div>
 </footer>
 </body>

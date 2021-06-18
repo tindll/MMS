@@ -411,10 +411,15 @@ ftp.storbinary('STOR trades.json',open('trades.json','rb'))
 ftp.cwd("/zjamsty.com/charts")
 dirList = ftp.nlst()
 #ACTIVATE POPULATION CONTROL // i'm getting bored i think
-#for swaggedOutPictureOfChart in dirList:
-#    trdIDdir = int(swaggedOutPictureOfChart[5:-4])
-#    if (trdIDdir<int(tradeID)-10): #keep only the 10 most recent charts
-#        ftp.delete(swaggedOutPictureOfChart)
+#print(len(dirList))
+lengthL = len(dirList)
+for swaggedOutPictureOfChart in dirList:
+    if (lengthL>=15):
+    #keep only the 15 most recent charts
+        ftp.delete(swaggedOutPictureOfChart)
+        lengthL -= 1 
+    else :
+        break
 
 ftp.storbinary('STOR chart'+tradeID+'.png',open('charts/chart'+tradeID+'.png','rb'))
 
