@@ -42,6 +42,7 @@
             <th>Leverage</th>
             <th>Date</th>
             <th>Trade reason</th>
+            <th>id</th>
         </tr>
     </thead>
     <style> tr{cursor: pointer;margin: 15px 0;}
@@ -78,6 +79,7 @@
             <th>Leverage</th>
             <th>Date</th>
             <th>Trade reason</th>
+            <th>chart id</th> 
         </tr>
     </thead>
     <tbody style="color:black">
@@ -105,20 +107,17 @@
   var modalImg = document.getElementById("img01");
   var captionText = document.getElementById("caption");
   $(document).ready( function () {
-    $('#table_id').DataTable({"order": [[ 0, "desc" ]]});
+    $('#table_id').DataTable({"order": [[ 0, "desc" ]],"columnDefs": [{"targets": [ 8 ],"visible": false}]});
     $('#table_id1').DataTable({"order": [[ 0, "desc" ]]});
     var table = $('#table_id').DataTable();
     $('#table_id tbody').on('click', 'tr', function () {
         var data = table.row( this ).data();
         modal.style.display = "block";
-        modalImg.src = '/charts/chart'+data[0]+'.png';
+        modalImg.src = '/charts/'+data[8]+'.png';
         captionText.innerHTML = "chart - id:"+data[0]+"<br> (click anywhere to get rid of this chart)"
-        let dataID = parseInt(data[0]);
-        let tmp  = parseInt(dataID);
-        let count = 0;
         modalImg.onerror = function(){
-          captionText.innerHTML = "chart - id:"+data[0]+" is unavailable <br> (only 15 most recent charts are stored on the database)<br> (click anywhere to get rid of this message)"
-          modalImg.src = '';
+          captionText.innerHTML = "chart - id:"+data[0]+" is unavailable <br> (only 50 most recent charts are stored on the database or it's a duplicate)<br> (click anywhere to get rid of this message)"
+          modalImg.src = 'notfound.png';
         };
         //image.src = 'non-existing.jpg';
         //alert( 'You clicked on '+data[0]+'\'s row' );
@@ -154,11 +153,11 @@
 
 
 
-<footer style ="position: fixed;left: 0;bottom: 0; width: 100%;" class="bg-light text-center text-lg-start">
-<div class="text-center p-3" id="footer" style="background-color: rgba(0, 0, 0, 0.2);">
-some trades may seem conflicting, but it's most likely because they're on different time frames <br>
-click on a position to see the chart, charts are only available on more recent trades because hosting is expensive (in terms of disk space) <br>
-</div>
+<footer style =" position: fixed;left: 0;bottom: 0; width: 100%;" class="fixed-bottom">
+  <div class="text-center p-3" id="footer" style="background-color: rgba(0, 0, 0, 0.2);">
+  some trades may seem conflicting, but it's most likely because they're on different time frames <br>
+  click on a position to see the chart, charts are only available on more recent trades because hosting is expensive (in terms of disk space) <br>
+  </div>
 </footer>
 </body>
 </html>

@@ -184,11 +184,11 @@ def dmi_crossover(df):
     for row in dmi_cross.itertuples(): #ugly code, need to find a better way to do this
         if(row.DMIp>row.DMIm):
             if(dmicrossover=='BELOW'): #filtering signals with %BB
-                print("potential bullish trend reversal @ ",row.Index,'@', row.close)
+                print("potential bullish trend reversal @ ",row.Index,'@', row.close,tradeID)
             dmicrossover = 'ABOVE'
         else : 
             if(dmicrossover=='ABOVE'): #filtering signals with %BB
-                print("potential bearish trend reversal @ ",row.Index,'@', row.close)
+                print("potential bearish trend reversal @ ",row.Index,'@', row.close,tradeID)
             dmicrossover = 'BELOW'
 
 def find_macd_signalCrossovers(df):
@@ -205,13 +205,13 @@ def find_macd_signalCrossovers(df):
             if(crossover=='DOWN'): #filtering signals with %BB
                 if(df.index[-5]<row.Index):
                     date = (row.Index).strftime("%m/%d/%Y, %H:%M:%S")
-                    updateJSON_newtrade(symbol,"LONG",row.close,"TBD",'10x',date,'Bullish MACD crossover')
+                    updateJSON_newtrade(symbol,"LONG",row.close,"TBD",'10x',date,'Bullish MACD crossover',tradeID)
             crossover = 'UP'
         else : 
             if(crossover=='UP'): #filtering signals with %BB
                 if(df.index[-5]<row.Index):
                     date = (row.Index).strftime("%m/%d/%Y, %H:%M:%S")
-                    updateJSON_newtrade(symbol,"SHORT",row.close,"TBD",'10x',date,'Bearish MACD crossover')
+                    updateJSON_newtrade(symbol,"SHORT",row.close,"TBD",'10x',date,'Bearish MACD crossover',tradeID)
             crossover = 'DOWN'
 
 
@@ -252,7 +252,7 @@ def find_divergences(df):
                             RSIDifference = local_low_list[index2][1] - local_low_list[index][1] 
                             if(df.index[-5]<local_low.index[index2]): #if divergence is recent
                                 date = local_low.index[index2].strftime("%m/%d/%Y, %H:%M:%S")
-                                updateJSON_newtrade(symbol,"LONG",local_low_list[index2][0],"TBD",'10x',date,'Regular Bullish divergence found')
+                                updateJSON_newtrade(symbol,"LONG",local_low_list[index2][0],"TBD",'10x',date,'Regular Bullish divergence found',tradeID)
                             #print("recent regular bullish divergence found")
                             #print("regular bullish divergence found @low n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
                             #print(local_low_list[index]," -> ",local_low_list[index2])
@@ -271,7 +271,7 @@ def find_divergences(df):
                         RSIDifference = local_low_list[index][1] - local_low_list[index2][1]
                         if(df.index[-5]<local_low.index[index2]): #if divergence is recent
                             date = local_low.index[index2].strftime("%m/%d/%Y, %H:%M:%S")
-                            updateJSON_newtrade(symbol,"LONG",local_low_list[index2][0],"TBD",'10x',date,'Hidden Bullish divergence found')
+                            updateJSON_newtrade(symbol,"LONG",local_low_list[index2][0],"TBD",'10x',date,'Hidden Bullish divergence found',tradeID)
                         #print("recent hidden bullish divergence found")
                         #print("hidden bullish divergence found @low n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
                         #print(local_low_list[index]," -> ",local_low_list[index2])
@@ -308,7 +308,7 @@ def find_divergences(df):
                             RSIDifference = local_high_list[index][1] - local_high_list[index2][1]
                             if(df.index[-5]<local_high.index[index2]): #if divergence is recent
                                 date = local_high.index[index2].strftime("%m/%d/%Y, %H:%M:%S")
-                                updateJSON_newtrade(symbol,"SHORT",local_high_list[index2][0],"TBD",'10x',date,'Regular Bearish divergence found')
+                                updateJSON_newtrade(symbol,"SHORT",local_high_list[index2][0],"TBD",'10x',date,'Regular Bearish divergence found',tradeID)
                             #print("recent regular bearish divergence found")
                             #print("regular bearish divergence found @high n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
                             #print(local_high_list[index]," -> ",local_high_list[index2])
@@ -326,7 +326,7 @@ def find_divergences(df):
                         RSIDifference = local_high_list[index2][1] - local_high_list[index][1]
                         if(df.index[-5]<local_high.index[index2]): #if divergence is recent
                             date = local_high.index[index2].strftime("%m/%d/%Y, %H:%M:%S")
-                            updateJSON_newtrade(symbol,"SHORT",local_high_list[index2][0],"TBD",'10x',date,'Hidden Bearish divergence found')
+                            updateJSON_newtrade(symbol,"SHORT",local_high_list[index2][0],"TBD",'10x',date,'Hidden Bearish divergence found',tradeID)
                         #print("recent hidden bearish divergence found")
                         #print("hidden bearish divergence found @high n°",index, " to ", index2," // diff : ",priceDifference,",",RSIDifference)
                         #print(local_high_list[index]," -> ",local_high_list[index2])
@@ -385,7 +385,7 @@ def check_BBsqueeze(df):
 # 3. Double tops/triple top/ bottom 
 
 
-def updateJSON_newtrade(symbol,positionType,openPrice,close,leverage,Date,tradeReason):
+def updateJSON_newtrade(symbol,positionType,openPrice,close,leverage,Date,tradeReason,trade_ID):
     with open('trades.json','r+') as tradesJSON:
         data = json.load(tradesJSON)
         newTRADE = {
@@ -396,7 +396,8 @@ def updateJSON_newtrade(symbol,positionType,openPrice,close,leverage,Date,tradeR
             "close$": close,
             "leverageX": leverage,
             "Date": Date,
-            "tradeReason": tradeReason
+            "tradeReason": tradeReason,
+            "chartID": trade_ID
             }
         data['trades'].append(newTRADE)
         tradesJSON.seek(0)
@@ -411,17 +412,15 @@ ftp.storbinary('STOR trades.json',open('trades.json','rb'))
 ftp.cwd("/zjamsty.com/charts")
 dirList = ftp.nlst()
 #ACTIVATE POPULATION CONTROL // i'm getting bored i think
-#print(len(dirList))
+dirList.sort()
+print(dirList)
+print(len(dirList))
 lengthL = len(dirList)
-for swaggedOutPictureOfChart in dirList:
-    if (lengthL>=15):
-    #keep only the 15 most recent charts
-        ftp.delete(swaggedOutPictureOfChart)
-        lengthL -= 1 
-    else :
-        break
+if (lengthL>=50):
+    #keep only the 50 most recent charts
+    ftp.delete(dirList[0])
 
-ftp.storbinary('STOR chart'+tradeID+'.png',open('charts/chart'+tradeID+'.png','rb'))
+ftp.storbinary('STOR '+tradeID+'.png',open('charts/chart'+tradeID+'.png','rb'))
 
 
 print("")
