@@ -413,6 +413,8 @@ ftp.cwd("/zjamsty.com/charts")
 dirList = ftp.nlst()
 #ACTIVATE POPULATION CONTROL // i'm getting bored i think
 dirList.sort()
+dirList = sorted(dirList, key = lambda x: int(x.split(".")[0])) # sort to delete the least recent chart
+
 print(dirList)
 print(len(dirList))
 lengthL = len(dirList)
