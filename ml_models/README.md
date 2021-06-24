@@ -5,10 +5,14 @@ This file contains everything related to the machine learning side of the projec
 
 ## test1.py
 This file is an LSTM based model that tries to predict the closing price of an asset (in this case ETH) based on previous close prices.
+What I've learnt through this project on machine learning is that if something predicts with a very high accuracy%, something's probably wrong.
+The approach taken for this model was to try and predict tomorrow's closing price based on the last 100 day closes, hence why the predicted values are so closely correlated to the actual values. However, when actually applied to trading, this model would not make profit.
+Although this model may be wrong, it served as a useful stepping stone.
 
-Although this model may be wrong in almost every way possible, it served as a useful stepping stone.
 ![most recent chart](https://github.com/tindll/MMS/blob/main/ml_models/model_plot.png)
 
+## test2.py
+This file is an LSTM based model that tries to predict the closing price of an asset (in this case ETH) based on previous close prices.
 ###### How to run these files :
 https://docs.docker.com/get-started/
 
@@ -17,9 +21,3 @@ https://docs.docker.com/get-started/
 The python code also produces charts (as seen below) and I would like to make a website that shows all active trades with pertinent information : http://www.zjamsty.com/
 
 2) I would also like to try and make a regression based machine learning AI using tensorflow. (My python code produces a CSV like file (see c:\data\pandas.txt), and thanks to the binance API, I have access to a near unlimited supply of price information, my datasets will be produced thanks to these "CSV" files)
-
-![most recent chart](https://github.com/tindll/mms/blob/main/chart.png)
-
-
-
-*List of tasks in progress and to do are under the project tab.*
