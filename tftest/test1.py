@@ -10,31 +10,23 @@ import matplotlib.pyplot as plt
 
 plt.style.use('dark_background')
 df=pd.read_csv('/testingTF/dfCSV.txt')
-print(df)
-
 plt.figure(figsize=(16,8))
 plt.title('open Price History')
-
 plt.plot(df['close'])
-
 plt.xlabel('Date',fontsize=18)
 plt.ylabel('Close Price')
-
-#plt.show() won't work because i'm a terminal only LEGEND.
-plt.savefig('/testingTF/plotty_wotty.png')
+plt.savefig('/testingTF/plotm1.png')
 
 data = df.filter(['close'])
 dataset = data.values
 
 #training the model
-
 train_len = math.ceil(len(dataset)*.7)
 print(train_len)
 
 #scale
 scaler = MinMaxScaler(feature_range=(0,1))
 scaled_data = scaler.fit_transform(dataset)
-
 
 #create the training data set
 #create the scaled training data set
@@ -58,7 +50,6 @@ x_train = np.reshape(x_train,(x_train.shape[0],x_train.shape[1],1))
 print(x_train.shape)
 
 
-
 #LSTM model
 model = Sequential()
 model.add(LSTM(50,return_sequences=True,input_shape=(x_train.shape[1],1)))
@@ -68,7 +59,6 @@ model.add(Dense(1))
 
 #compile model (improve on loss function; how well model did)
 model.compile(optimizer='adam', loss='mean_squared_error')
-
 
 #train model
 model.fit(x_train,y_train,batch_size=1, epochs=1)

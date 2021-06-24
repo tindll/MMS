@@ -83,9 +83,9 @@ def valuesforDF():
     # marking good places to buy and sell for dataset
     #__________________________________________________________#
     #plotting local lows for price
-    df['buy@'] = df.iloc[argrelextrema(df.close.values, np.less_equal,order=(15))[0]]['close']
+    #df['buy@'] = df.iloc[argrelextrema(df.close.values, np.less_equal,order=(15))[0]]['close']
     #plotting local highs for price
-    df['sell@'] = df.iloc[argrelextrema(df.close.values, np.greater_equal,order=(15))[0]]['close']
+    #df['sell@'] = df.iloc[argrelextrema(df.close.values, np.greater_equal,order=(15))[0]]['close']
     #__________________________________________________________#
 
     #creating CSV file from the dataframe

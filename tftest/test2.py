@@ -1,29 +1,15 @@
 import math
-import pandas_datareader as web
-import pandas as pd
 import numpy as np
-import datetime as dt
-import pandas_datareader as pdr
-import seaborn as sns
-import matplotlib.pyplot as plt
-import bs4 as bs
-import requests
-from IPython.display import clear_output
-from scipy.stats import mstats
-from sklearn.cluster import KMeans
-from sklearn.mixture import GaussianMixture
-from sklearn.model_selection import RandomizedSearchCV, validation_curve, TimeSeriesSplit
-from sklearn.ensemble import RandomForestClassifier
-import pickle
-import os
-from sklearn.model_selection import GridSearchCV
-from sklearn.preprocessing import MinMaxScaler
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense,LSTM
+import pandas as pd
 import matplotlib.pyplot as plt
 
+from sklearn.metrics import classification_report
+from sklearn.metrics import accuracy_score
+from sklearn.ensemble import RandomForestClassifier
+
+df=pd.read_csv('/testingTF/dataset.txt')
+
 plt.style.use('dark_background')
-df=pd.read_csv('/testingTF/dfCSV.txt')
 plt.figure(figsize=(10,6))
 plt.title('BTCUSDT 1H-30D')
 plt.plot(df['close'])
@@ -31,110 +17,23 @@ plt.xlabel('Date',fontsize=18)
 plt.ylabel('close$')
 plt.savefig('/testingTF/model2.png')
 
+dataset_length = df.shape[0]
+split = int(dataset_length * 0.75) # 75/25 split
 
-X_train = train_data.loc[:,Target_variables]
+X = df[['open', 'high', 'low', 'close', 'volume', 'BB_MIDDLE',
+        'MACD', 'MACD_signal', 'RSI', 'BBp',
+       'ADX', 'DMIp', 'DMIm', 'STOCH_K', 'STOCH_D', 'OBV']] 
 
-Y_train = train_data.loc[:,['Target_Direction']]
+Y = np.where(df['close'].shift(-10) > df['close'], 1, -1)
 
+X_train, X_test = X[:split], X[split:]
+y_train, y_test = Y[:split], Y[split:]
 
-#create a randomforest
-rf = RandomForestClassifier()
+random_forestC = RandomForestClassifier(random_state=5)
+model = random_forestC.fit(X_train, y_train)
+print('Accuracy (%): ', accuracy_score(y_test, model.predict(X_test), normalize=True)*100.0)
 
-
-
-
-
-
-
-
-
-
-
-
-data = df.filter(['close'])
-dataset = data.values
-
-#training the model
-
-train_len = math.ceil(len(dataset)*.7)
-print(train_len)
-
-#scale
-scaler = MinMaxScaler(feature_range=(0,1))
-scaled_data = scaler.fit_transform(dataset)
+report = classification_report(y_test, model.predict(X_test))
+print(report)
 
 
-#create the training data set
-#create the scaled training data set
-train_data = scaled_data[0:train_len, :]
-# x and y train
-x_train = []
-y_train = []
-
-for i in range(100,len(train_data)):
-    x_train.append(train_data[i-100:i,0])
-    y_train.append(train_data[i,0])
-    if i<=100:
-        print(x_train)
-        print(y_train)
-
-#convert x and y train for lstm model
-x_train,y_train = np.array(x_train),np.array(y_train)
-
-#reshape (lstm needs 3 dimension, but here's it's 2)
-x_train = np.reshape(x_train,(x_train.shape[0],x_train.shape[1],1))
-print(x_train.shape)
-
-
-
-#LSTM model
-model = Sequential()
-model.add(LSTM(50,return_sequences=True,input_shape=(x_train.shape[1],1)))
-model.add(LSTM(50,return_sequences=False))
-model.add(Dense(25))
-model.add(Dense(1))
-
-#compile model (improve on loss function; how well model did)
-model.compile(optimizer='adam', loss='mean_squared_error')
-
-
-#train model
-model.fit(x_train,y_train,batch_size=1, epochs=1)
-
-
-#create testing dataset
-test_data = scaled_data[train_len-100: , :]
-#create data sets x and y
-x_test =[]
-# y are values that we want the model to predict
-y_test =dataset[train_len:,:]
-
-for i in range(100,len(test_data)):
-    x_test.append(test_data[i-100:i,0])
-
-# convert data to numpy
-x_test = np.array(x_test)
-
-#reshape (2 dim to 3 dim) -- 1 because number of features (close price)
-x_test = np.reshape(x_test,(x_test.shape[0],x_test.shape[1],1))
-
-#get predicted price values; predictions should be identical to y_test dataset
-predictions = model.predict(x_test)
-predictions = scaler.inverse_transform(predictions)
-
-#get rmse
-rmse = np.sqrt(np.mean(predictions-y_test)**2)
-print(rmse)
-
-#plot
-train = data[:train_len]
-valid = data[train_len:]
-valid['Predictions'] = predictions
-plt.figure(figsize=(16,8))
-plt.title('Model')
-plt.xlabel('Date',fontsize=18)
-plt.ylabel('close', fontsize=18)
-plt.plot(train['close'])
-plt.plot(valid[['close','Predictions']])
-plt.legend(['Train','Val','Predictions'],loc='lower right')
-plt.savefig('/testingTF/model_plot.png')
