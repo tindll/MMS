@@ -1,5 +1,6 @@
 # MMS 
 Although it would be unfair to still call this a proof of concept, this project is still unfinished. And I undoubtedly intend on continuing it. 
+
 The goal was to be an introduction to algorithmic trading
 
 Project as an introduction to algorithmic trading. Despite the name, the sole goal isn't just to turn a profit but to understand how to automize the process of trading.
