@@ -1,0 +1,3 @@
+docker exec -it intelligent_goldberg python3 testingTF/test1.py
+    ^ command to execute test1.py on container 'intelligent_goldberg'
+    container must be running though !
