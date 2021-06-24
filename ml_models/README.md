@@ -15,7 +15,9 @@ Although this model may be wrong, it served as a useful stepping stone.
 ## test2.py
 This file is a random forest based model that tries to predict whether the close in 10 candles time (in this case 40hours) is higher or lower than the current close.
 Unlike the previous model, this one also takes technical indicators into consideration.
-This model has a more realistic approach, achieving roughly ~53% correct prediction rate. This could be considerably higher with a bit of tweaking.
+This model has a more realistic approach, achieving roughly ~53% correct prediction rate. This could be considerably higher with a bit of tweaking. (better choice of techincal indicators)
+
+![most recent chart](https://github.com/tindll/MMS/blob/main/ml_models/test2ret.PNG)
 
 ###### How to run these files :
 https://docs.docker.com/get-started/
