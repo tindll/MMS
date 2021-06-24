@@ -1,7 +1,8 @@
 # MMS 
 Although it would be unfair to still call this a proof of concept, this project is still unfinished. And I undoubtedly intend on continuing it. 
 
-The goal was to be an introduction to algorithmic trading
+The goal wasn't to make an algorithm capable of making money, despite the name, but more so as an introduction to the automation of trading and machine learning.
+In hindsight, I may have set my expectations too high given the amount of time I invested in the project, seeing as the two subjects
 
 Project as an introduction to algorithmic trading. Despite the name, the sole goal isn't just to turn a profit but to understand how to automize the process of trading.
 As I don't want to overcomplexify my trading strategy to start with, I will use simple indicators such as momentum, macd, rsi, bbands (potentially fibonacci
