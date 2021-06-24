@@ -66,6 +66,9 @@ else : print(symbol+' long/short ratio is undecided right now')
 
 # !! need to think about this because argrelextrema will return most recent value sometimes and that's not always a good thing
 
+#testing MACD crossovers
+cross_UP = []
+cross_DOWN = []
 
 ## setting up binance API from environment variables ##
 api_key = os.environ.get('API_KEY')
@@ -95,9 +98,10 @@ def create_plot(df):
             mpf.make_addplot(df["MACD"], panel=3, color='red', ylabel="MACD"),
             mpf.make_addplot(df["MACD_signal"], panel=3, color='orange'),
             mpf.make_addplot(df["min"],type='scatter',markersize=25,color='red',marker='^'),
-            mpf.make_addplot(df["max"],type='scatter',markersize=25,color='green',marker='v'),
+            mpf.make_addplot(df["max"],type='scatter',markersize=25,color='green',marker='v')
           ]
     mpf.plot(df, type='candle', axtitle = symbol+" "+timeframe +" ("+amountDays+"D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='charts/chart'+tradeID+'.png', volume = True, volume_panel=2, style = s,addplot=ap0, fill_between=dict(y1=df['BB_LOWER'].values, y2=df['BB_UPPER'].values, alpha=0.15))
+
 
 def valuesforDF():
     #fills dataframe with information : open, close, etc... & rsi, macd, bbands
@@ -162,8 +166,8 @@ def valuesforDF():
 
 
     #calling to indicator functions
-    find_divergences(df)
-    find_macd_signalCrossovers(df)
+    #find_divergences(df)
+    #find_macd_signalCrossovers(df)
     #dmi_crossover(df)
     #find_Flags(df)
     check_BBsqueeze(df)
@@ -171,7 +175,7 @@ def valuesforDF():
     create_plot(df)
 
     #creating CSV file from the dataframe
-    df.to_csv(r'dfCSV.txt', header=None, index=None, sep=',', mode='w+')
+    #df.to_csv(r'dfCSV.txt', sep=',', mode='w+')
 
     
 
@@ -203,15 +207,17 @@ def find_macd_signalCrossovers(df):
     for row in df_crossovers.itertuples(): #ugly code, need to find a better way to do this
         if(row.MACD>row.MACD_signal):
             if(crossover=='DOWN'): #filtering signals with %BB
-                if(df.index[-5]<row.Index):
-                    date = (row.Index).strftime("%m/%d/%Y, %H:%M:%S")
-                    updateJSON_newtrade(symbol,"LONG",row.close,"TBD",'10x',date,'Bullish MACD crossover',tradeID)
+                #if(df.index[-5]<row.Index):
+                df.at[row.Index,'MACD_cross'] = 'UP'
+                date = (row.Index).strftime("%m/%d/%Y, %H:%M:%S")
+                    #updateJSON_newtrade(symbol,"LONG",row.close,"TBD",'10x',date,'Bullish MACD crossover',tradeID)
             crossover = 'UP'
         else : 
             if(crossover=='UP'): #filtering signals with %BB
-                if(df.index[-5]<row.Index):
-                    date = (row.Index).strftime("%m/%d/%Y, %H:%M:%S")
-                    updateJSON_newtrade(symbol,"SHORT",row.close,"TBD",'10x',date,'Bearish MACD crossover',tradeID)
+                #if(df.index[-5]<row.Index):
+                df.at[row.Index,'MACD_cross'] = 'DOWN'
+                date = (row.Index).strftime("%m/%d/%Y, %H:%M:%S")
+                    #updateJSON_newtrade(symbol,"SHORT",row.close,"TBD",'10x',date,'Bearish MACD crossover',tradeID)
             crossover = 'DOWN'
 
 
@@ -347,16 +353,32 @@ def find_divergences(df):
         #!!check volume to make sure!!
     
 
+
+# bollinger band squeezes:
+# long when bbwidth is low and candle closes above upper bollinger band -- try to ride upwards trend
+    #close when ADX > 45
+# short when bbwidth is low and candle closes below lower bollinger band 
 def check_BBsqueeze(df):
     bbwidth = df[df['BBWIDTH'].notna()& df['ADX'].notna()]
     width_avg = bbwidth["BBWIDTH"].mean()
     std = bbwidth['BBWIDTH'].std()
     bbwidth = bbwidth[bbwidth.BBWIDTH < width_avg-1.25*std] 
-    bbwidth = bbwidth[bbwidth.ADX < 30]
-    print(bbwidth.BBWIDTH, bbwidth.ADX)
-    
-    minV = bbwidth['BBWIDTH'].min()
-    #print(width_avg,std,minV)
+    #bbwidth = bbwidth[bbwidth.ADX < 30]
+    #print(bbwidth.BBWIDTH, bbwidth.ADX)
+    #minV = bbwidth['BBWIDTH'].min()
+    for row in bbwidth.itertuples():
+        #wait for close below or above bband
+        for row2 in df[row.Index:].itertuples():
+            #sell signal
+            if(row2.close<row2.BB_LOWER):
+                print("sell")
+                break
+            #buy signal     
+            if(row2.close>row2.BB_UPPER):
+                print('buy')
+                break
+                
+
 
 #def find_Flags(df):
     #Bull flags
@@ -412,17 +434,16 @@ ftp.storbinary('STOR trades.json',open('trades.json','rb'))
 ftp.cwd("/zjamsty.com/charts")
 dirList = ftp.nlst()
 #ACTIVATE POPULATION CONTROL // i'm getting bored i think
-dirList.sort()
 dirList = sorted(dirList, key = lambda x: int(x.split(".")[0])) # sort to delete the least recent chart
-
-print(dirList)
-print(len(dirList))
-lengthL = len(dirList)
-if (lengthL>=50):
+if (len(dirList)>=50):
     #keep only the 50 most recent charts
     ftp.delete(dirList[0])
 
 ftp.storbinary('STOR '+tradeID+'.png',open('charts/chart'+tradeID+'.png','rb'))
+
+
+
+
 
 
 print("")
