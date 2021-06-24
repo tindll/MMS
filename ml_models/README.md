@@ -2,7 +2,7 @@
 Although I didn't do as much ML as I would have liked, the project still served as a good introduction to machine learning. (Basic concepts & simple implementation)
 This file contains everything related to the machine learning side of the project.
 
-# test1.py
+## test1.py
 This file is an LSTM based model that tries to predict the closing price of an asset (in this case ETH) based on previous close prices.
 
 Although this model may be wrong in almost every way possible, it served as a useful stepping stone.
