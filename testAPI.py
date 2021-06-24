@@ -6,6 +6,7 @@ import datetime
 import sys
 import urllib.request
 import json
+import pandas_profiling
 from binance.client import Client
 from finta import TA
 from scipy.signal import argrelextrema #for local highs/lows
@@ -148,6 +149,9 @@ def valuesforDF():
     STOCH_D = TA.STOCHD(df)
     df['STOCH_K'] = STOCH_K
     df['STOCH_D'] = STOCH_D
+
+    profileR = pandas_profiling.ProfileReport(df)
+    profileR.to_file("./report.html")
 
 
     #dataframe information for divergences (find_divergences())
