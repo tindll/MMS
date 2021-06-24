@@ -1,6 +1,5 @@
 # **ml_models**
 Although I didn't do as much ML as I would have liked, the project still served as a good introduction to machine learning. (Basic concepts & simple implementation)
-
 This file contains everything related to the machine learning side of the project.
 
 ## test1.py
