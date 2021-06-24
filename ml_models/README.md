@@ -13,7 +13,10 @@ Although this model may be wrong, it served as a useful stepping stone.
 ![most recent chart](https://github.com/tindll/MMS/blob/main/ml_models/model_plot.png)
 
 ## test2.py
-This file is an LSTM based model that tries to predict the closing price of an asset (in this case ETH) based on previous close prices.
+This file is a random forest based model that tries to predict whether the close in 10 candles time (in this case 40hours) is higher or lower than the current close.
+Unlike the previous model, this one also takes technical indicators into consideration.
+This model has a more realistic approach, achieving roughly ~53% correct prediction rate. This could be considerably higher with a bit of tweaking.
+
 ###### How to run these files :
 https://docs.docker.com/get-started/
 
