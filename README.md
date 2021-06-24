@@ -1,5 +1,5 @@
-# MMS 
-##General Statements:
+# **MMS**
+#### - General Statements:
 Although it would be unfair to still call this a proof of concept, this project is still unfinished. And I undoubtedly intend on continuing it. 
 It was very optimistic of me to believe I'd be anywhere near 
 
