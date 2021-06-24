@@ -58,11 +58,11 @@ averageRatio/=30
 
 if((argrelextrema(np.array(ratio_list), np.greater_equal,order=3)[-1][-1])==29):
     if(ratio_list[29]>averageRatio): # not right, needs changing
-        print('more longs than usual on '+symbol)
+        print(symbol+' long/short ratio: high #longs')
 elif ((argrelextrema(np.array(ratio_list), np.less_equal,order=3)[-1][-1])==29):
     if(ratio_list[29]<averageRatio):
-        print('more shorts than usual on '+symbol)
-else : print(symbol+' long/short ratio is undecided right now')
+        print(symbol+' long/short ratio: high #shorts')
+else : print(symbol+' long/short ratio: undecided')
 
 # !! need to think about this because argrelextrema will return most recent value sometimes and that's not always a good thing
 
@@ -165,19 +165,26 @@ def valuesforDF():
     #__________________________________________________________#
 
 
-    #calling to indicator functions
-    #find_divergences(df)
-    #find_macd_signalCrossovers(df)
-    #dmi_crossover(df)
+    #calling to indicator functions:
+    find_divergences(df)   #works
+    find_macd_signalCrossovers(df) #works
+    #dmi_crossover(df) #needs work
     #find_Flags(df)
-    check_BBsqueeze(df)
+    bbRSI(df)
+    check_BBsqueeze(df) #works
+
     #call to the function that creates the graph
     create_plot(df)
 
     #creating CSV file from the dataframe
-    #df.to_csv(r'dfCSV.txt', sep=',', mode='w+')
+    df.to_csv(r'dfCSV.txt', sep=',', mode='w+')
 
-    
+def bbRSI(df):
+    if(df.RSI[-1]>70 and df.BBp[-1]>0.95):
+        print(symbol," is overbought")
+    elif(df.RSI[-1]<30 and df.BBp[-1]<0.05):
+        print(symbol," is undersold")
+    else : print(symbol, "is not currently overbought or oversold on this time frame")
 
 #this function and macd crossovers could just be one function
 #also this function isn't working too great
@@ -185,13 +192,14 @@ def dmi_crossover(df):
     dmi_cross = df[['ADX','DMIp','DMIm','close']]
     dmi_cross = dmi_cross[(dmi_cross['ADX']>25)  & (dmi_cross['ADX']<100) & (dmi_cross['ADX'].notna()) ] #filtering dataframe where ADX is >25 ; only look for positions if trend isn't weak
     dmicrossover = '' #declaring here because of first iteration
+    print(dmi_cross)
     for row in dmi_cross.itertuples(): #ugly code, need to find a better way to do this
         if(row.DMIp>row.DMIm):
-            if(dmicrossover=='BELOW'): #filtering signals with %BB
+            if(dmicrossover=='BELOW'): #should filter signals with %BB
                 print("potential bullish trend reversal @ ",row.Index,'@', row.close,tradeID)
             dmicrossover = 'ABOVE'
         else : 
-            if(dmicrossover=='ABOVE'): #filtering signals with %BB
+            if(dmicrossover=='ABOVE'): #should filter signals with %BB
                 print("potential bearish trend reversal @ ",row.Index,'@', row.close,tradeID)
             dmicrossover = 'BELOW'
 
@@ -207,17 +215,17 @@ def find_macd_signalCrossovers(df):
     for row in df_crossovers.itertuples(): #ugly code, need to find a better way to do this
         if(row.MACD>row.MACD_signal):
             if(crossover=='DOWN'): #filtering signals with %BB
-                #if(df.index[-5]<row.Index):
-                df.at[row.Index,'MACD_cross'] = 'UP'
-                date = (row.Index).strftime("%m/%d/%Y, %H:%M:%S")
-                    #updateJSON_newtrade(symbol,"LONG",row.close,"TBD",'10x',date,'Bullish MACD crossover',tradeID)
+                if(df.index[-5]<row.Index):
+                    df.at[row.Index,'MACD_cross'] = 'UP'
+                    date = (row.Index).strftime("%m/%d/%Y, %H:%M:%S")
+                    updateJSON_newtrade(symbol,"LONG",row.close,"TBD",'10x',date,'Bullish MACD crossover',tradeID)
             crossover = 'UP'
         else : 
             if(crossover=='UP'): #filtering signals with %BB
-                #if(df.index[-5]<row.Index):
-                df.at[row.Index,'MACD_cross'] = 'DOWN'
-                date = (row.Index).strftime("%m/%d/%Y, %H:%M:%S")
-                    #updateJSON_newtrade(symbol,"SHORT",row.close,"TBD",'10x',date,'Bearish MACD crossover',tradeID)
+                if(df.index[-5]<row.Index):
+                    df.at[row.Index,'MACD_cross'] = 'DOWN'
+                    date = (row.Index).strftime("%m/%d/%Y, %H:%M:%S")
+                    updateJSON_newtrade(symbol,"SHORT",row.close,"TBD",'10x',date,'Bearish MACD crossover',tradeID)
             crossover = 'DOWN'
 
 
@@ -357,6 +365,7 @@ def find_divergences(df):
 # bollinger band squeezes:
 # long when bbwidth is low and candle closes above upper bollinger band -- try to ride upwards trend
     #close when ADX > 45
+    
 # short when bbwidth is low and candle closes below lower bollinger band 
 def check_BBsqueeze(df):
     bbwidth = df[df['BBWIDTH'].notna()& df['ADX'].notna()]
@@ -366,17 +375,27 @@ def check_BBsqueeze(df):
     #bbwidth = bbwidth[bbwidth.ADX < 30]
     #print(bbwidth.BBWIDTH, bbwidth.ADX)
     #minV = bbwidth['BBWIDTH'].min()
+    copies = []
     for row in bbwidth.itertuples():
-        #wait for close below or above bband
-        for row2 in df[row.Index:].itertuples():
-            #sell signal
-            if(row2.close<row2.BB_LOWER):
-                print("sell")
-                break
-            #buy signal     
-            if(row2.close>row2.BB_UPPER):
-                print('buy')
-                break
+        if (df.index[-10]<row.Index):
+            #wait for close below or above bband
+            for row2 in df[row.Index:].itertuples():
+                #sell signal
+                if(row2.close<row2.BB_LOWER):
+                    #avoid repeating signals
+                    if (copies.count(row2.Index)<1):
+                        copies.append(row2.Index)
+                        date = (row2.Index).strftime("%m/%d/%Y, %H:%M:%S")
+                        updateJSON_newtrade(symbol,"SHORT",row2.close,"close when ADX>40",'10x',date,'Bollinger band squeeze',tradeID)
+                    break
+                #buy signal     
+                if(row2.close>row2.BB_UPPER):
+                    #avoid repeating signals
+                    if (copies.count(row2.Index)<1):
+                        copies.append(row2.Index)   
+                        date = (row2.Index).strftime("%m/%d/%Y, %H:%M:%S")
+                        updateJSON_newtrade(symbol,"LONG",row2.close,"close when ADX>40",'10x',date,'Bollinger band squeeze',tradeID)
+                    break
                 
 
 
@@ -394,7 +413,7 @@ def check_BBsqueeze(df):
     #this function identifies the trend and tries to find these patters forming
     #check impusle move down, if EMA
 
-# 2. Reversal Chart Patterns
+# 2. Reversal Chart Patterns 
         #Head and shoulders
         #Slightly more complicated than the previous patterns,
         #The Head & Shoulders pattern is characterized by an uptrend; 

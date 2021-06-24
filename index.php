@@ -15,7 +15,7 @@
 </head>
 <body style ="background-color:#0c030f">
 <div class="jumbotron text-center" style="background-color:#0f0b15">
-  <h1 style = "color:white">algorithm's open trades</h1>
+  <h1 style = "color:white">algorithm's open trades <br></h1>
   <a href="https://github.com/tindll/mms"><img style="position: absolute;top: 7%;right: 5%;float: right" src="github.png" alt="back to github" width="70" height="70"></a>
 </div>
 
@@ -53,7 +53,7 @@
         $tradesList = json_decode($json, true);
         foreach($tradesList as $key => $arrays){
             foreach($arrays as $array){
-              if(in_array("TBD",$array)){
+              if(in_array("TBD",$array)||in_array("close when ADX>40",$array)){
                 echo "<tr>";
                 foreach($array as $key => $value){
                     echo "<td>". $value . "</td>";
