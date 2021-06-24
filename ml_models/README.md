@@ -2,7 +2,7 @@
 Although I didn't do as much ML as I would have liked, the project still served as a good introduction to machine learning. (Basic concepts & simple implementation)
 
 This file contains everything related to the machine learning side of the project.
-Both test.py files use the dataframe create by TA_ALGO.py .
+Both test.py files use the dataframe created by TA_ALGO.py .
 
 ## test1.py
 This file is an LSTM based model that tries to predict the closing price of an asset (in this case ETH) based on previous close prices.
