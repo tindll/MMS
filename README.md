@@ -24,7 +24,7 @@
    <br>'trades.json' is then sent to http://www.zjamsty.com/ , where all recent trades are shown with their respective charts (like the one above).
 
    4)'TA_ALGO.py' also produces a .csv file from the dataframe that contains price and indicator information.
-   That .csv file (dfCSV.txt) is then sent to my docker container 'intelligent_goldberg'.
+   That .csv file (dfCSV.txt) is then sent to my docker container 'intelligent_goldberg'. And is used as a dataset
    
    5)'test1.py' & 'test2.py' (more information is available in 'ml_models'), 2 ML models, are then executed in the container.
 
