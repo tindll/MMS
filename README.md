@@ -11,13 +11,18 @@
    <br>The algorithm looks for positions on the 15m, 1h & 1D charts, for 10 different cryptocurrencies.
    <br>It looks for positions based mainly on RSI divergences, MACD crossovers & Bollinger bands.
 
+         
+     ![most recent chart](https://github.com/tindll/mms/blob/main/chart.png)
+
 - ### Simplified rundown:
 
-   'TA_algo.py' connects to Binance's API. It retrieves OHLC information from the API, then calls functions from various different python libraries such as pandas,      mplfinance and finta. Thanks to these libraries, the algorithm produces charts, like the one below, based on dataframes containing the OHLC data.
+   1)'TA_algo.py' connects to Binance's API. It retrieves OHLC information from the API, then calls functions from various different python libraries such as pandas,      mplfinance and finta. Thanks to these libraries, the algorithm produces charts, like the one below, based on dataframes containing the OHLC data.
    
    2)Several functions, like 'find_macd_signalCrossovers(df)' & 'find_divergences(df)', are then called on the dataframe to analyze the data and to find potential          positions.
+   
+   3)If a position is found, it is added to 'trades.json' with all pertinent information to that trade (open price, position type ...).
+   'trades.json' is then sent to http://www.zjamsty.com/ , where are recent trades are shown with their respective charts (like the one above).
 
-![most recent chart](https://github.com/tindll/mms/blob/main/chart.png)
 
 1) A python script will create signals when it thinks it's a good time to enter a position (short/long), based on RSI divergences, close above/below bbands, macd crossovers and potentially ichimoku clouds (given a better understanding of clouds).
 The python code also produces charts (as seen below) and I would like to make a website that shows all active trades with pertinent information : http://www.zjamsty.com/
