@@ -1572,17 +1572,6 @@
             "Date": "06/21/2021, 02:00:00",
             "tradeReason": "Bearish MACD crossover",
             "chartID": "143"
-        },
-        {
-            "tradeID": 144,
-            "symbol": "BTCUSDT",
-            "positionType": "SHORT",
-            "open$": 34449.55,
-            "close$": "TBD",
-            "leverageX": "10x",
-            "Date": "06/24/2021, 17:00:00",
-            "tradeReason": "Hidden Bearish divergence found",
-            "chartID": "144"
         }
     ]
 }
