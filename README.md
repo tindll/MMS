@@ -21,12 +21,14 @@
    2)Several functions, like 'find_macd_signalCrossovers(df)' & 'find_divergences(df)', are then called on the dataframe to analyze the data and to find potential          positions.
    
    3)If a position is found, it is added to 'trades.json' with all pertinent information to that trade (open price, position type ...).
-   'trades.json' is then sent to http://www.zjamsty.com/ , where are recent trades are shown with their respective charts (like the one above).
+   'trades.json' is then sent to http://www.zjamsty.com/ , where all recent trades are shown with their respective charts (like the one above).
 
    4)'TA_ALGO.py' also produces a .csv file from the dataframe that contains price and indicator information.
    That .csv file (dfCSV.txt) is then sent to my docker container 'intelligent_goldberg'
    
    5)'test1.py' & 'test2.py' (more information is available in 'ml_models'), 2 ML models, are then executed in the container.
+
+- ### What now ?:
 
 
 *List of tasks in progress and to do are under the project tab.*
