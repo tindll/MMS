@@ -16,21 +16,17 @@
 
 - ### Simplified rundown:
 
-   1)'TA_algo.py' connects to Binance's API. It retrieves OHLC information from the API, then calls functions from various different python libraries such as pandas,      mplfinance and finta. Thanks to these libraries, the algorithm produces charts, like the one below, based on dataframes containing the OHLC data.
+   1)'TA_ALGO.py' connects to Binance's API. It retrieves OHLC information from the API, then calls functions from various different python libraries such as pandas,      mplfinance and finta. Thanks to these libraries, the algorithm produces charts, like the one below, based on dataframes containing the OHLC data.
    
    2)Several functions, like 'find_macd_signalCrossovers(df)' & 'find_divergences(df)', are then called on the dataframe to analyze the data and to find potential          positions.
    
    3)If a position is found, it is added to 'trades.json' with all pertinent information to that trade (open price, position type ...).
    'trades.json' is then sent to http://www.zjamsty.com/ , where are recent trades are shown with their respective charts (like the one above).
 
-
-1) A python script will create signals when it thinks it's a good time to enter a position (short/long), based on RSI divergences, close above/below bbands, macd crossovers and potentially ichimoku clouds (given a better understanding of clouds).
-The python code also produces charts (as seen below) and I would like to make a website that shows all active trades with pertinent information : http://www.zjamsty.com/
-
-2) I would also like to try and make a regression based machine learning AI using tensorflow. (My python code produces a CSV like file (see c:\data\pandas.txt), and thanks to the binance API, I have access to a near unlimited supply of price information, my datasets will be produced thanks to these "CSV" files)
-
-
-
+   4)'TA_ALGO.py' also produces a .csv file from the dataframe that contains price and indicator information.
+   That .csv file (dfCSV.txt) is then sent to my docker container 'intelligent_goldberg'
+   
+   5)'test1.py' & 'test2.py' (more information is available in 'ml_models') are then executed in the container.
 
 
 *List of tasks in progress and to do are under the project tab.*
