@@ -9,7 +9,7 @@ This file is an LSTM based model that tries to predict the closing price of an a
 What I've learnt through this project on machine learning is that if a model predicts with a very high accuracy%, something's probably wrong.
 
 The approach taken for this model was to try and predict tomorrow's closing price based on the last 100 day closes, hence why the predicted values are so closely correlated to the actual values. However, when actually applied to trading, this model would not make profit.
-Although this model may be wrong, it served as a useful stepping stone.
+<br>Although this model may be wrong, it served as a useful stepping stone.
 
 ![most recent chart](https://github.com/tindll/MMS/blob/main/ml_models/model_plot.png)
 
