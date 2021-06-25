@@ -13,7 +13,7 @@ retracements, ATR, Ichimoku Clouds).
 
 - ### Simplified rundown:
 
-   1)'TA_algo.py' connects to Binance's API. It retrieves OHLC information from the API, then calls functions from various different python libraries such as pandas,      mplfinance and finta. Thanks to these libraries, the algorithm produces charts, like the one below, based on dataframes containing the OHLC data.
+   1) 'TA_algo.py' connects to Binance's API. It retrieves OHLC information from the API, then calls functions from various different python libraries such as pandas,      mplfinance and finta. Thanks to these libraries, the algorithm produces charts, like the one below, based on dataframes containing the OHLC data.
    
    2)Several functions, like 'find_macd_signalCrossovers(df)' & 'find_divergences(df)', are then called on the dataframe to analyze the data and to find potential          positions.
 
