@@ -1,19 +1,21 @@
 # **MMS**
 - ### General Statements:
-      Although it would be unfair to still call this a proof of concept, this project is still unfinished. And I undoubtedly intend on continuing it. 
-It was very optimistic of me to believe I'd be anywhere near 
-
-The goal wasn't to make an algorithm capable of making money, despite the name, but more so as an introduction to the automation of trading and machine learning.
-In hindsight, I may have set my expectations too high given the amount of time I invested in the project, seeing as either of the two subjects
+   Although it would be unfair to still call this a proof of concept, this project is still unfinished. I undoubtedly intend on continuing it.      
+   
+      
+   The goal for this project wasn't to make an algorithm capable of making a profit, despite the name, but more so as an introduction to the automation
+   of trading and machine learning. In hindsight, I may have set my expectations too high given the amount of time I invested in the project, seeing as 
+   either of the two subjects
 
 Project as an introduction to algorithmic trading. Despite the name, the sole goal isn't just to turn a profit but to understand how to automize the process of trading.
 As I don't want to overcomplexify my trading strategy to start with, I will use simple indicators such as momentum, macd, rsi, bbands (potentially fibonacci
 retracements, ATR, Ichimoku Clouds). 
 
-##Simplified rundown
+- ### Simplified rundown:
 
-1) 'TA_algo.py' connects to Binance's API. It retrieves OHLC information from the API, then calls functions from various different python libraries such as pandas, mplfinance and finta. Thanks to these libraries, the algorithm produces charts, like the one below, based on dataframes containing the OHLC data.
-2) Several functions, like 'find_macd_signalCrossovers(df)' & 'find_divergences(df)', are called on the dataframe to analyze the data and to find potential positions.
+   1)'TA_algo.py' connects to Binance's API. It retrieves OHLC information from the API, then calls functions from various different python libraries such as pandas,      mplfinance and finta. Thanks to these libraries, the algorithm produces charts, like the one below, based on dataframes containing the OHLC data.
+   
+   2)Several functions, like 'find_macd_signalCrossovers(df)' & 'find_divergences(df)', are then called on the dataframe to analyze the data and to find potential          positions.
 
 ![most recent chart](https://github.com/tindll/mms/blob/main/chart.png)
 
