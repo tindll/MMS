@@ -22,7 +22,7 @@ This model has a more realistic approach, achieving roughly ~53% correct predict
 
 <br><br>
 ### How I'd continue with machine learning
-To start with, I'd look at more courses, watch more videos, just generally learn more about ML.
+To start with, I'd look at more courses, watch more videos, just generally learn more about ML. (coursera, google ML crash course ...)
 <br> I'd then try to fix my previous mistakes and make these models better.
 <br>
 At first, my approach to the problem at hand was wrong, I was thinking about regression based models instead of classification ones.
