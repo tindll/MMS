@@ -10,5 +10,5 @@
 <br>      (1.) produces 'chart.png', 'trades.json', 'dfCSV.txt','report.html'
 
 (Download and install docker & download packages onto container)<br><br>
-  2. in ml_models execute 'python3 shortcut.py'<br>
+  2. in /ml_models execute 'python3 shortcut.py'<br>
   (shortcut.py executes functions that copies dataset.txt, dfCSV.txt, test1.py, test2.py from the working directory to the container)
