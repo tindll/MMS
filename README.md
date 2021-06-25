@@ -1,6 +1,6 @@
 # **MMS**
 - ### General Statements :
-   Although it would be unfair to still call this a proof of concept, this project is still unfinished. I undoubtedly intend on continuing it.
+   Although it would be unfair to still call this a proof of concept, this project is still unfinished. I undoubtedly intend on continuing it. <br>
    The goal for this project wasn't to make an algorithm capable of making a profit, despite the name, but more so to serve as an introduction to the automation
    of trading and machine learning. <br>In hindsight, I may have set my expectations too high from the start, seeing as either of the two aforementioned subjects alone      would have provided me with more than enough work and research to do.
    
