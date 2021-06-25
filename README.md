@@ -34,7 +34,7 @@
    <br> Having said that, there are still many tasks that I haven't yet done, including pattern recognition (like in [this paper](https://mpra.ub.uni-muenchen.de/60825/1/MPRA_paper_60825.pdf) or [this one](https://projet.liris.cnrs.fr/imagine/pub/proceedings/ICANN-2010/papers/6354/63540130.pdf)).
    <br> I have a solid foundation (that still needs a considerable amount of work/fixing), a lot can be improved upon, a non-exhaustive list could be :
    fixing what's wrong with the current algo, creating a backtesting engine, creating a more robust classification model, making the website better...
-   <br> And that's just off the top of my head.
+   <br> I'd also like to continue learning about machine learning.
 <br>
 
 *List of tasks in progress and to do are under the project tab.*
