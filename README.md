@@ -28,8 +28,10 @@
    
    5)'test1.py' & 'test2.py' (more information is available in 'ml_models'), 2 ML models, are then executed in the container.
 
-- ### What now ?:
-
+- ### What now ?
+   Having spent most of my time recently; either learning about trading with techinical analysis and the basic principles of machine learning or failing resit exams,
+   I intend on taking a break.
+   <br> Having said that, there are still many tasks that I haven't yet done, including pattern recognition (like [this](https://mpra.ub.uni-muenchen.de/60825/1/MPRA_paper_60825.pdf) or [this](https://projet.liris.cnrs.fr/imagine/pub/proceedings/ICANN-2010/papers/6354/63540130.pdf))
 
 *List of tasks in progress and to do are under the project tab.*
 
