@@ -26,7 +26,7 @@
    4)'TA_ALGO.py' also produces a .csv file from the dataframe that contains price and indicator information.
    That .csv file (dfCSV.txt) is then sent to my docker container 'intelligent_goldberg'
    
-   5)'test1.py' & 'test2.py' (more information is available in 'ml_models') are then executed in the container.
+   5)'test1.py' & 'test2.py' (more information is available in 'ml_models'), 2 ML models, are then executed in the container.
 
 
 *List of tasks in progress and to do are under the project tab.*
