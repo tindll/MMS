@@ -6,5 +6,9 @@
 <br>
 1. execute 'python3 TA_ALGO.py {ticker} {timeframe} {amountDays}'
 <br> where {ticker} = 'BTCUSDT', 'ETHUSDT', 'DOGEUSDT'... , {timeframe} = '30m', '1h','1d','1w' ... & {amountDays} = 15,30,50,700...
-
 ![image](https://user-images.githubusercontent.com/76219233/123369604-5561cb00-d57e-11eb-9e1f-71f24f79a135.png)
+<br>      (1.) produces 'chart.png', 'trades.json', 'dfCSV.txt','report.html'
+
+(Download and install docker & download packages onto container)<br><br>
+  2. in ml_models execute 'python3 shortcut.py'<br>
+  (shortcut.py executes functions that copies dataset.txt, dfCSV.txt, test1.py, test2.py from the working directory to the container)
