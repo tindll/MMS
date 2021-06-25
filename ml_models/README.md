@@ -26,7 +26,8 @@ To start with, I'd look at more courses, watch more videos, just generally learn
 <br> I'd then try to fix my previous mistakes and make these models better.
 <br>
 At first, my approach to the problem at hand was wrong, I was thinking about regression based models instead of classification ones.
-<br> So I would try different approaches, including something similar to the one in [this paper](https://e-tarjome.com/storage/panel/fileuploads/2019-06-15/1560578401_E11311-e-tarjome.pdf)
+<br> So I would try different approaches, including something similar to the one in [this paper](https://e-tarjome.com/storage/panel/fileuploads/2019-06-15/1560578401_E11311-e-tarjome.pdf).
+<br> And I'd definitely use jupyter notebook instead of running the code on a container.
 
 
 
