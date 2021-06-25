@@ -21,7 +21,7 @@ This model has a more realistic approach, achieving roughly ~53% correct predict
 ![test2output](https://github.com/tindll/MMS/blob/main/ml_models/test2ret.PNG)    &emsp;     &emsp;&emsp;                         ![var_corr](https://github.com/tindll/MMS/blob/main/ml_models/variable_correlation_test2.png)
 
 
-##### **How I'd continue with machine learning**
+### **How I'd continue with machine learning**
 To start with, I'd look at more courses, watch more videos, just generally learn more about ML.
 <br> I'd then try to fix my previous mistakes and make these models better.
 <br>
