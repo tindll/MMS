@@ -35,7 +35,7 @@
    <br> I have a solid foundation (that still needs a considerable amount of work/fixing), a lot can be improved upon, a non-exhaustive list could be :
    fixing what's wrong with the current algo, creating a backtesting engine, creating a more robust classification model, making the website better...
    <br> And that's just off the top of my head.
-
+<br>
 
 *List of tasks in progress and to do are under the project tab.*
 
