@@ -19,6 +19,9 @@ Unlike the previous model, this one also takes technical indicators into conside
 This model has a more realistic approach, achieving roughly ~53% correct prediction rate. This could be considerably higher with a bit of tweaking. (better choice of techincal indicators amongst other things)
 
 ![test2output](https://github.com/tindll/MMS/blob/main/ml_models/test2ret.PNG)    &emsp;     &emsp;&emsp;                         ![var_corr](https://github.com/tindll/MMS/blob/main/ml_models/variable_correlation_test2.png)
+<br>
+![test2chart](https://github.com/tindll/MMS/blob/main/ml_models/model2.PNG)
+
 
 <br><br>
 #### How I'd continue with machine learning : 
