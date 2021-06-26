@@ -17,8 +17,12 @@ The approach taken for this model was to try and predict tomorrow's closing pric
 This file is a random forest based model that tries to predict whether the close in 10 candles time (in this case 40hours) is higher or lower than the current close.
 Unlike the previous model, this one also takes technical indicators into consideration.
 This model has a more realistic approach, achieving roughly ~53% correct prediction rate. This could be considerably higher with a bit of tweaking. (better choice of techincal indicators amongst other things)
+![test2chart](https://github.com/tindll/MMS/blob/main/ml_models/model2.png)
+<br>
 
 ![test2output](https://github.com/tindll/MMS/blob/main/ml_models/test2ret.PNG)    &emsp;     &emsp;&emsp;                         ![var_corr](https://github.com/tindll/MMS/blob/main/ml_models/variable_correlation_test2.png)
+
+
 
 <br><br>
 #### How I'd continue with machine learning : 
