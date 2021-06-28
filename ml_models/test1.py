@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 plt.style.use('dark_background')
 df=pd.read_csv('/testingTF/dfCSV.txt')
 plt.figure(figsize=(16,8))
-plt.title('open Price History')
+plt.title('Close Price History')
 plt.plot(df['close'])
 plt.xlabel('Date',fontsize=18)
 plt.ylabel('Close Price')

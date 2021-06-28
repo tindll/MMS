@@ -29,7 +29,7 @@ Y = np.where(df['close'].shift(-10) > df['close'], 1, -1)
 X_train, X_test = X[:split], X[split:]
 y_train, y_test = Y[:split], Y[split:]
 
-random_forestC = RandomForestClassifier(random_state=5)
+random_forestC = RandomForestClassifier(n_estimators=1000,random_state=5)
 model = random_forestC.fit(X_train, y_train)
 print('Accuracy (%): ', accuracy_score(y_test, model.predict(X_test), normalize=True)*100.0)
 

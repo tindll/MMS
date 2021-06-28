@@ -17,8 +17,6 @@ from scipy.signal import argrelextrema
 
 
 
-with open('../trades.json','r+') as tradesJSON1:
-    data = json.load(tradesJSON1)
-    tradeID = len(data['trades'])+1
-    tradeID = str(tradeID)
+with open('ALLtrades.json','r+') as trades:
+    data = json.load(trades)
     print(data)

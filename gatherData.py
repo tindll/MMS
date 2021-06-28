@@ -1,4 +1,6 @@
 import os
+
+from pandas.core.frame import DataFrame
 import mplfinance as mpf
 import pandas as pd
 import numpy as np
@@ -8,6 +10,7 @@ import urllib.request
 import json
 import pandas_profiling
 import matplotlib.pyplot as plt
+import math
 from PIL import Image
 from binance.client import Client
 from finta import TA
@@ -24,7 +27,6 @@ if(len(sys.argv)!=4):
 symbol = sys.argv[1]
 timeframe = sys.argv[2]
 amountDays = sys.argv[3]
-
 try: 
     url = urllib.request.urlopen("https://fapi.binance.com/futures/data/topLongShortAccountRatio?symbol="+symbol+"&period=1h")
 except urllib.error.HTTPError as exception:
@@ -80,9 +82,11 @@ def valuesforDF():
     df['STOCH_D'] = STOCH_D
     #OBV = TA.OBV(df)
     #df['OBV'] = OBV
+    WilliamsR = TA.WILLIAMS(df)
+    df['WR'] = WilliamsR
 
-    df['min1'] = df.iloc[argrelextrema(df.close.values, np.less_equal,order=(15))[0]]['close']
-    df['max2'] = df.iloc[argrelextrema(df.close.values, np.greater_equal,order=(15))[0]]['close']
+    df['min1'] = df.iloc[argrelextrema(df.close.values, np.less_equal,order=(20))[0]]['close']
+    df['max2'] = df.iloc[argrelextrema(df.close.values, np.greater_equal,order=(20))[0]]['close']
 
 
     # marking good places to buy and sell for dataset
@@ -95,7 +99,6 @@ def valuesforDF():
     
     df.loc[df.buy.notna(), 'buy_sell'] = 1
     df.loc[df.sell.notna(), 'buy_sell'] = -1
-    df.loc[df.buy_sell.isnull(), 'buy_sell'] = 0 #needs changing
     df.loc[df.buy.isnull(), 'buy'] = 0
     df.loc[df.sell.isnull(), 'sell'] = 0
 
@@ -103,12 +106,35 @@ def valuesforDF():
     #df = df.dropna()
     df['div'] = 0
     find_divergences(df)
+    
     df['BBSQ'] = 0
-    check_BBsqueeze(df)
+    #check_BBsqueeze(df)
+    df['buyORsell'] = 0
 
+    df_lows = df[df['min1'].notna() & df['RSI'].notna()& df['BB_MIDDLE'].notna()]
+    df_highs = df[df['max2'].notna() & df['RSI'].notna()& df['BB_MIDDLE'].notna()]
+    lows_highs = pd.concat([df_lows, df_highs])
+    # buy_sell -> if it's a good position to buy or sell 
+    #   1 = good position to short
+    #   -1 = good position to long
+    #   anything in between = :shrug:
 
-    df = df.drop(['min1', 'max2'], axis=1)
-
+    # it's not adding the last part of the df, from last high/low to end
+    print(lows_highs)
+    for lowORhigh in lows_highs.itertuples(): 
+        #add column to dataframe with % of move up or down
+        pos = lowORhigh.close-lows_highs.shift(-1).loc[lowORhigh.Index].close
+        for subset in df[:lowORhigh.Index].itertuples():
+            # set extremes
+            if(subset.close==lowORhigh.close):
+                if(math.isnan(lowORhigh.min1)):
+                    df.at[subset.Index,'buyORsell']=1
+                else : df.at[subset.Index,'buyORsell']= -1
+            elif (pos > 0) : #if price goes down
+                df.at[subset.Index,'buyORsell']= ((lowORhigh.close - subset.close)/pos)
+            elif (pos < 0): #if price goes up
+                df.at[subset.Index,'buyORsell']= -((subset.close - lowORhigh.close)/(pos*-1))
+    print(df)
     plt.style.use('dark_background')
     plt.figure(figsize=(16,8))
     plt.title('Model')
@@ -119,23 +145,28 @@ def valuesforDF():
     #plt.plot(df['MACD_signal'])
     plt.plot(df['close'].loc[df["buy"]!=0],"g^", markersize=6)
     plt.plot(df['close'].loc[df["sell"]!=0],"rv", markersize=6)
-    plt.plot(df['close'].loc[df["BBSQ"]==1],"gv", markersize=12)
-    plt.plot(df['close'].loc[df["BBSQ"]==1],"g^", markersize=12)
-    plt.plot(df['close'].loc[df["BBSQ"]==-1],"rv", markersize=12)
-    plt.plot(df['close'].loc[df["BBSQ"]==-1],"r^", markersize=12)
+    #plt.plot(df['close'].loc[df["BBSQ"]==1],"gv", markersize=12)
+    #plt.plot(df['close'].loc[df["BBSQ"]==1],"g^", markersize=12)
+    #plt.plot(df['close'].loc[df["BBSQ"]==-1],"rv", markersize=12)
+    #plt.plot(df['close'].loc[df["BBSQ"]==-1],"r^", markersize=12)
     plt.plot(df['close'].loc[df["div"]==1],"gx", markersize=12)
     plt.plot(df['close'].loc[df["div"]==2],"gx", markersize=12)
     plt.plot(df['close'].loc[df["div"]==3],"rx", markersize=12)
     plt.plot(df['close'].loc[df["div"]==4],"rx", markersize=12)
     plt.savefig('chart4ML.png')
     #creating CSV file from the dataframe
-    df = df.dropna()
+    #df = df.dropna()
     df.to_csv(r'dataset.txt', sep=',', mode='w+')
     #profileR = pandas_profiling.ProfileReport(df)
     #profileR.to_file("./report.html")
-    print(df)
+    #print(df)
 
-#def lookForGoodpositions(df):
+    mc = mpf.make_marketcolors(up='w',down='b')
+    s  = mpf.make_mpf_style(marketcolors=mc)
+    ap0 = [ mpf.make_addplot(df['buyORsell'],color='cyan')
+          ]
+    mpf.plot(df, type='line', axtitle = symbol+" "+timeframe +" ("+amountDays+"D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chartBoS.png', volume = True, style = s,addplot=ap0)
+
 
 
 
@@ -208,7 +239,6 @@ def find_divergences(df):
                         RSIDifference = local_high_list[index2][1] - local_high_list[index][1]
                         df.at[local_high.index[index2],'div']=4
                         i+=1
-
     print(i,"divergences found")
 
 def check_BBsqueeze(df):
@@ -216,7 +246,7 @@ def check_BBsqueeze(df):
     bbwidth = df[df['BBWIDTH'].notna()& df['ADX'].notna()]
     width_avg = bbwidth["BBWIDTH"].mean()
     std = bbwidth['BBWIDTH'].std()
-    bbwidth = bbwidth[bbwidth.BBWIDTH < width_avg-1.25*std] 
+    bbwidth = bbwidth[bbwidth.BBWIDTH < width_avg-1.1*std] 
     #bbwidth = bbwidth[bbwidth.ADX < 30]
     #print(bbwidth.BBWIDTH, bbwidth.ADX)
     #minV = bbwidth['BBWIDTH'].min()
@@ -229,7 +259,7 @@ def check_BBsqueeze(df):
                 #avoid repeating signals
                 if (copies.count(row2.Index)<1):
                     copies.append(row2.Index)
-                    df.at[row2.Index,'BBSQ'] = -1
+                    df.at[row2.Index,'BBSQ'] = 1
                     i += 1
                 break
             #buy signal     
@@ -244,3 +274,4 @@ def check_BBsqueeze(df):
 
 
 valuesforDF()
+

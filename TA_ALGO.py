@@ -179,7 +179,7 @@ def valuesforDF():
 
     #call to the function that creates the graph
     create_plot(df)
-
+    print(df)
     #creating CSV file from the dataframe
     df.to_csv(r'dfCSV.txt', sep=',', mode='w+')
 

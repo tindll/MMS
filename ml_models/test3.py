@@ -20,11 +20,20 @@ plt.savefig('/testingTF/model3.png')
 dataset_length = df.shape[0]
 split = int(dataset_length * 0.75) # 75/25 split
 
-X = df[['open', 'high', 'low', 'close', 'volume', 'BB_MIDDLE',
+ilist = ['volume',
         'MACD', 'MACD_signal', 'RSI', 'BBp',
-       'ADX', 'DMIp', 'DMIm', 'STOCH_K', 'STOCH_D','BBSQ','div']] 
+        'ADX', 'STOCH_K', 'STOCH_D','BBSQ','div','WR']
 
-Y = np.where(df['close'].shift(-24) > df['close'], 1, -1)
+X = df[['close']] 
+vars = ['"close"']
+for indi in ilist :
+        vars.append('"'+indi+'"')
+        str1 = ','.join(vars)
+        print(str1)
+        X = df[[np.str_(str1)]] 
+        #print(X.columns.values)        
+
+Y = np.where(df['close'].shift(-12) > df['close'], 1, -1)
 
 X_train, X_test = X[:split], X[split:]
 y_train, y_test = Y[:split], Y[split:]
