@@ -11,10 +11,11 @@ import json
 import pandas_profiling
 import matplotlib.pyplot as plt
 import math
-from PIL import Image
 from binance.client import Client
 from finta import TA
 from scipy.signal import argrelextrema #for local highs/lows
+from sklearn import preprocessing
+
 
 #checking that we have 3 arguments (the validity of the arguments is tested later)
 if(len(sys.argv)!=4):
@@ -126,6 +127,7 @@ def valuesforDF():
         pos = lowORhigh.close-lows_highs.shift(-1).loc[lowORhigh.Index].close
         for subset in df[:lowORhigh.Index].itertuples():
             # set extremes
+            print(pos)
             if(subset.close==lowORhigh.close):
                 if(math.isnan(lowORhigh.min1)):
                     df.at[subset.Index,'buyORsell']=1
@@ -134,7 +136,16 @@ def valuesforDF():
                 df.at[subset.Index,'buyORsell']= ((lowORhigh.close - subset.close)/pos)
             elif (pos < 0): #if price goes up
                 df.at[subset.Index,'buyORsell']= -((subset.close - lowORhigh.close)/(pos*-1))
-    print(df)
+
+    x = df['buyORsell'].to_numpy()
+    x = x.reshape(-1, 1)
+    min_max_scaler = preprocessing.MinMaxScaler()
+    x_scaled = min_max_scaler.fit_transform(x)
+    x_scaled = x_scaled.flatten()
+    x_scaled = pd.Series(x_scaled)
+    df = df.assign(bOs_N = x_scaled.values)
+
+
     plt.style.use('dark_background')
     plt.figure(figsize=(16,8))
     plt.title('Model')
@@ -159,11 +170,11 @@ def valuesforDF():
     df.to_csv(r'dataset.txt', sep=',', mode='w+')
     #profileR = pandas_profiling.ProfileReport(df)
     #profileR.to_file("./report.html")
-    #print(df)
+    print(df)
 
     mc = mpf.make_marketcolors(up='w',down='b')
     s  = mpf.make_mpf_style(marketcolors=mc)
-    ap0 = [ mpf.make_addplot(df['buyORsell'],color='cyan')
+    ap0 = [ mpf.make_addplot(df['bOs_N'],color='red')
           ]
     mpf.plot(df, type='line', axtitle = symbol+" "+timeframe +" ("+amountDays+"D)", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='chartBoS.png', volume = True, style = s,addplot=ap0)
 
